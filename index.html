@@ -81,11 +81,12 @@
   <p class="sub">Tap a moment to see where everyone goes. Some moments have a Before and After, so tap those to watch the play happen.</p>
 
   <div class="chips" id="chips">
-    <button class="chip" onclick="go(0)"><span class="n">1</span>High Press</button>
-    <button class="chip" onclick="go(1)"><span class="n">2</span>Squeeze</button>
-    <button class="chip" onclick="go(2)"><span class="n">3</span>Their kickoff</button>
-    <button class="chip" onclick="go(3)"><span class="n">4</span>Our kickoff</button>
-    <button class="chip" onclick="go(4)"><span class="n">5</span>Free draw</button>
+    <button class="chip" onclick="go(0)"><span class="n">1</span>Push up</button>
+    <button class="chip" onclick="go(1)"><span class="n">2</span>High Press</button>
+    <button class="chip" onclick="go(2)"><span class="n">3</span>Squeeze</button>
+    <button class="chip" onclick="go(3)"><span class="n">4</span>Their kickoff</button>
+    <button class="chip" onclick="go(4)"><span class="n">5</span>Our kickoff</button>
+    <button class="chip" onclick="go(5)"><span class="n">6</span>Free draw</button>
   </div>
 
   <div class="phaserow" id="phaserow" style="display:none">
@@ -231,9 +232,13 @@ function P(o){
 }
 // Each moment has one or more phases (Before / After). Arrows are stored as pixel coordinates; shapes reference player ids.
 var SCN=[
- {name:"High Press",cue:"Ball near their goal, everyone up!",
+ {name:"Push up",cue:"Ball near their goal, everyone up!",
   sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us. Up there it's feet and head only, no hands. The striker makes the diamond: the LM can't cross into the middle, so instead he runs into the goal box to be dangerous. Remember, a diamond can be made by whoever is closest, so it doesn't have to be the same players every time.",
   phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
+
+ {name:"High Press",cue:"High press: win it back high!",
+  sub:"This is when the other team has the ball near their own goal and is trying to play out. We do NOT sit back. The closest player sprints at the ball right away, and the players near him stand in front of the easy passes so the other team can't escape. Win it this high and we are one pass from a goal. Be brave and push up together. If they boot it long over us, the keeper sweeps and we drop and reset.",
+  phases:[{pos:P({st:[180,120],cam:[180,205],lm:[85,175],rm:[275,175],dm:[180,285],lb:[100,335],cb:[180,355],rb:[260,335],gk:[180,442],ball:[180,85],o1:[180,75],o2:[110,120],o3:[250,120],o4:[180,40]}),arr:[{t:"run",x1:180,y1:104,x2:180,y2:93},{t:"run",x1:98,y1:158,x2:112,y2:130},{t:"run",x1:262,y1:158,x2:246,y2:130}],shapes:[]}]},
 
  {name:"Squeeze",cue:"Squeeze and choke",
   sub:"This is how we defend any time the other team has the ball, anywhere on the field. Only ONE player, the closest one, runs at the ball. We do NOT all swarm it, because that leaves big gaps. Instead everyone else chokes them: we stand in every passing lane, behind them, beside them, and in front, so the player on the ball has nowhere to pass and gets stuck.",
