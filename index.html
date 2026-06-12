@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Juventus FC U10 · Board Editor · Phoenix FC</title>
+<title>Juventus FC U10 vs Phoenix FC · Our Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -52,15 +52,28 @@
   .keyrow{display:flex;flex-wrap:wrap;gap:9px 15px;justify-content:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);}
   .keyrow span{display:flex;align-items:center;gap:6px;}
   .foot{text-align:center;color:#5d5f67;font-size:11px;margin-top:26px;letter-spacing:.04em;}
+  .guide{margin-top:22px;}
+  .guide h2{font-family:"Oswald",sans-serif;font-weight:700;font-size:20px;color:var(--ink);letter-spacing:.02em;}
+  .guide .lead{color:var(--muted);font-size:13px;margin-top:4px;}
+  .who{font-size:12px;color:#c7c8cd;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:12px;line-height:1.8;}
+  .who b{color:var(--gold);font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.03em;}
+  .gitem{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;cursor:pointer;transition:border-color .2s;}
+  .gitem:hover{border-color:var(--gold);}
+  .gitem h4{font-family:"Oswald",sans-serif;font-weight:700;font-size:15px;color:var(--gold);display:flex;align-items:center;gap:8px;}
+  .gitem h4 .gn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a1300;font-size:12px;flex:0 0 auto;}
+  .gitem ul{margin:8px 0 0 2px;list-style:none;}
+  .gitem li{font-size:13px;color:#d9dade;margin-top:6px;padding-left:14px;position:relative;}
+  .gitem li:before{content:"›";position:absolute;left:0;color:var(--gold);}
+  .gitem li b{color:#f4f4f1;}
   textarea#exp{width:100%;margin-top:10px;background:#0f1116;color:#d9dade;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:11px;min-height:120px;display:none;}
   @media (prefers-reduced-motion: reduce){.pl,.ox{transition:none;}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="kicker">Juventus FC U10 · Coach Edit Mode</div>
-  <h1>Fix the Board <span class="num">vs Phoenix FC</span></h1>
-  <p class="sub">Drag the dots, ours, theirs, or the ball, and drag the arrows too: grab an arrow end to re-aim it, or its middle to slide it. Add or delete arrows per moment. Each moment keeps your fix. When it looks right, tap Copy and paste it to me, and I will update the matchday board and the printed sheet.</p>
+  <div class="kicker">Juventus FC U10 · Matchday Plan</div>
+  <h1>Our Plan <span class="num">vs Phoenix FC</span></h1>
+  <p class="sub">Six big moments in the game. Tap one to see where everyone goes — and read the simple plan for each one below.</p>
 
   <div class="chips" id="chips">
     <button class="chip" onclick="go(0)"><span class="n">1</span>Home shape</button>
@@ -90,11 +103,11 @@
           <line x1="278" y1="16" x2="278" y2="584"/>
         </g>
         <g font-family="Oswald" font-size="8" font-weight="600" letter-spacing="0.5" fill="#f4b740" fill-opacity="0.6" text-anchor="middle">
-          <text x="49" y="600">LW</text>
-          <text x="114" y="600">LHS</text>
-          <text x="180" y="600">C</text>
-          <text x="245" y="600">RHS</text>
-          <text x="311" y="600">RW</text>
+          <text x="49" y="600">L WING</text>
+          <text x="114" y="600">LEFT</text>
+          <text x="180" y="600">MIDDLE</text>
+          <text x="245" y="600">RIGHT</text>
+          <text x="311" y="600">R WING</text>
         </g>
       </g>
       <g fill="none" stroke="#eaf2ee" stroke-opacity="0.5" stroke-width="2">
@@ -142,9 +155,8 @@
     </svg>
 
     <div class="capbox">
-      <h3 id="cue">Our home shape</h3>
-      <p id="subtxt">The wide 3-4-1. Strong middle, wide wings.</p>
-      <p class="hint">Drag dots and arrows to fix them. Tap an arrow to select it, then Delete. Each moment keeps your changes.</p>
+      <h3 id="cue">Our team shape</h3>
+      <p id="subtxt">Where everyone stands when the game starts.</p>
 
       <div class="tools">
         <span class="tlab">Group</span>
@@ -176,12 +188,79 @@
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4b740" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4b740"/></svg>Our pass</span>
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#e5484d" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#e5484d"/></svg>Their pass</span>
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4f4f1" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4f4f1"/></svg>Run / press</span>
+      <span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#e5484d" stroke-width="2" stroke-dasharray="4 4"/></svg>Passing lane</span>
       <span><svg width="16" height="16"><polygon points="8,2 14,8 8,14 2,8" fill="none" stroke="#f4b740" stroke-width="1.6"/></svg>Diamond</span>
       <span><svg width="16" height="16"><polygon points="8,3 14,13 2,13" fill="none" stroke="#60a5fa" stroke-width="1.6"/></svg>Triangle</span>
     </div>
   </div>
 
-  <div class="foot">JUVENTUS FC U10 · BEFORE PHOENIX FC · JUNE 12, 2026 · DRAG DOTS AND ARROWS</div>
+  <div class="guide">
+    <h2>What's the plan?</h2>
+    <p class="lead">Tap any plan to see it on the board.</p>
+    <div class="who">
+      <b>GK</b> keeper · <b>LB CB RB</b> defenders · <b>CDM</b> deep middle · <b>LM RM</b> side middle · <b>CAM</b> top middle · <b>ST</b> striker
+    </div>
+
+    <div class="gitem" onclick="show(0)">
+      <h4><span class="gn">1</span>Our team shape</h4>
+      <ul>
+        <li>This is how we stand when the game starts.</li>
+        <li>3 defenders at the back, 4 players in the middle, 1 striker up top.</li>
+        <li>Every plan below starts from this shape.</li>
+      </ul>
+    </div>
+
+    <div class="gitem" onclick="show(1)">
+      <h4><span class="gn">2</span>Ball near their goal — everyone up!</h4>
+      <ul>
+        <li><b>Keeper:</b> run out to our retreat line and stand behind the defenders like an extra defender. Don't hide by the goal. Up there you can only kick or head the ball — no hands. If a ball goes behind us, sprint back and clear it.</li>
+        <li><b>Defenders (LB, CB, RB):</b> move all the way up to the middle line and push the team forward. The space behind is fine — the keeper covers it. If a ball gets through, run back fast, win it safely, and kick it away.</li>
+      </ul>
+    </div>
+
+    <div class="gitem" onclick="show(2)">
+      <h4><span class="gn">3</span>Make the diamond</h4>
+      <ul>
+        <li>When we have the ball and want to attack (even on kick-ins), the middle four make a diamond:</li>
+        <li><b>CDM</b> is the bottom, closest to our goal.</li>
+        <li><b>CAM</b> is the top, closest to their goal.</li>
+        <li><b>LM and RM</b> are the two sides, out wide.</li>
+        <li><b>Striker</b> stays highest of all, on the same side as the ball.</li>
+        <li>Keep the diamond as the ball moves around.</li>
+      </ul>
+    </div>
+
+    <div class="gitem" onclick="show(3)">
+      <h4><span class="gn">4</span>Squeeze and block</h4>
+      <ul>
+        <li>When they have the ball, everyone squeezes in close together.</li>
+        <li>Stand in the way of their passes — leave no gaps.</li>
+        <li>Same job on their kick-ins.</li>
+      </ul>
+    </div>
+
+    <div class="gitem" onclick="show(4)">
+      <h4><span class="gn">5</span>Their kickoff</h4>
+      <ul>
+        <li>Our mids and striker make a straight line of five — one player in each lane.</li>
+        <li>The fullbacks (LB, RB) step up behind, each staying in their own lane.</li>
+        <li>The keeper waits on our retreat line.</li>
+        <li>Watch the ball AND your player. The closest one runs at the ball right away; everyone else sprints in to help.</li>
+      </ul>
+    </div>
+
+    <div class="gitem" onclick="show(5)">
+      <h4><span class="gn">6</span>Our kickoff</h4>
+      <ul>
+        <li>The striker kicks off and passes the ball straight back to the CDM — every time.</li>
+        <li>Not sure who the CDM is? Just ask!</li>
+        <li>The CAM and CDM swap spots each kickoff to confuse Phoenix.</li>
+        <li>Once the CDM has the ball, we go straight into our diamond (plan 3).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot">JUVENTUS FC U10 · vs PHOENIX FC · JUNE 12, 2026</div>
 </div>
 <script>
 var SVGNS="http://www.w3.org/2000/svg";
@@ -198,28 +277,28 @@ if(!window.storage){
   }catch(e){}
 }
 var DEF=[
- {cue:"Our home shape",
-  sub:"The wide 3-4-1. Strong middle, wide wings. Every moment starts from here.",
+ {cue:"Our team shape",
+  sub:"Where everyone stands when the game starts. Three at the back, four in the middle, one striker up top. Every plan starts from here.",
   pos:{st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,377],o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[220,636],o7:[256,636],o8:[292,636],o9:[328,636]},
   arr:[]},
- {cue:"Ball in their third? Everybody up!",
-  sub:"Keeper comes out all the way to the retreat line and sweeps behind us. LB, CB and RB step up to the halfway line, even if players are in behind. If it gets through, track back, tackle safely, and kick it out. No hands outside our box.",
+ {cue:"Ball near their goal — everyone up!",
+  sub:"When we have the ball near their goal, the whole team pushes up. The keeper runs out to help. Our three defenders move up to the middle line. The space behind is okay — the keeper has it.",
   pos:{st:[222,92],cam:[198,165],lm:[46,140],rm:[314,140],dm:[180,255],lb:[108,312],cb:[180,324],rb:[252,312],gk:[180,410],ball:[252,98],o1:[274,104],o2:[140,128],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
   arr:[]},
- {cue:"Hold the diamond.",
-  sub:"CDM at the base, CAM at the tip, LM and RM between them in the wider lanes. The striker stays highest of all, shading the side the ball is on. Use this everywhere we build, including kick-ins.",
+ {cue:"Make the diamond",
+  sub:"To attack, the middle four make a diamond: CDM at the bottom, CAM at the top, LM and RM out to the sides. The striker stays highest, on the same side as the ball.",
   pos:{st:[235,240],cam:[180,290],lm:[70,345],rm:[290,345],dm:[180,400],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[254,452],o1:[218,330],o2:[40,636],o3:[76,636],o4:[112,636],o5:[148,636],o6:[184,636],o7:[220,636],o8:[256,636],o9:[292,636]},
   arr:[]},
- {cue:"Squeeze! Block every lane.",
-  sub:"The closest man presses the ball right away. Everyone else sprints in tight, sits in the passing lanes, and stays goal side. Leave them nowhere to pass. Same job on their kick-ins.",
+ {cue:"Squeeze and block",
+  sub:"When they have the ball, everyone squeezes in close and stands in the way of their passes. The closest player runs at the ball. Leave them no gaps.",
   pos:{st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[281,337],o1:[292,330],o2:[222,252],o3:[148,302],o4:[238,392],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
   arr:[{k:"lane",f:"o1",t:"o2"},{k:"lane",f:"o1",t:"o3"},{k:"lane",f:"o1",t:"o4"},{k:"press",f:"rm",t:"ball"}]},
- {cue:"Their kickoff: line of five.",
-  sub:"Mids and striker make a flat line, one man per lane. LB and RB step up to midfield height in their home lanes. Keeper holds the retreat line. The second the ball moves, the closest man in that lane presses and the rest sprint over to support.",
-  pos:{lm:[46,345],dm:[113,345],st:[180,348],cam:[247,345],rm:[314,345],lb:[108,380],cb:[180,386],rb:[252,380],gk:[180,420],ball:[138,244],o1:[167,289],o2:[196,289],o3:[128,232],o4:[262,224],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
+ {cue:"Their kickoff",
+  sub:"Our mids and striker make a straight line of five, one player in each lane. LB and RB step up behind them. The keeper waits on our retreat line. The moment the ball moves, the closest player runs at it and everyone else sprints in to help.",
+  pos:{lm:[46,345],dm:[113,345],st:[180,345],cam:[247,345],rm:[314,345],lb:[108,380],cb:[180,386],rb:[252,380],gk:[180,420],ball:[138,244],o1:[167,289],o2:[196,289],o3:[128,232],o4:[262,224],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
   arr:[{k:"oppass",f:[180,300],t:"ball"},{k:"press",f:"dm",t:"ball"},{k:"nudge",f:"lm"},{k:"nudge",f:"st"}]},
- {cue:"Our kickoff: first pass to the CDM.",
-  sub:"The striker taps it and plays it straight back to the CDM, every time. If you are not sure who the CDM is, just ask. CAM and CDM swap half-lanes on every new kickoff to keep Phoenix guessing. Once the CDM has it, we go straight into our diamond.",
+ {cue:"Our kickoff",
+  sub:"The striker kicks off and passes the ball back to the CDM, every time. Not sure who that is? Just ask! Then we go straight into our diamond and attack.",
   pos:{st:[166,318],lm:[46,400],dm:[113,400],cam:[247,400],rm:[314,400],lb:[108,478],cb:[180,492],rb:[252,478],gk:[180,548],ball:[180,301],o1:[168,282],o2:[214,272],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
   arr:[{k:"pass",f:"ball",t:"dm"}]}
 ];
@@ -313,6 +392,7 @@ function render(){
   for(c=0;c<chips.length;c++){chips[c].className=(c===cur)?"chip on":"chip";}
 }
 function go(i){cur=i;sel=-1;buildType=null;buildSel=[];el("exp").style.display="none";render();}
+function show(i){go(i);var b=document.querySelector(".board");if(b&&b.scrollIntoView){b.scrollIntoView({behavior:"smooth",block:"start"});}}
 function addArrow(t){
   ARR[cur].push({t:t,x1:150,y1:344,x2:200,y2:280});
   sel=ARR[cur].length-1;render();save();
@@ -367,11 +447,11 @@ function copyAll(){
     for(j=0;j<SHAPES[i].length;j++){var shh=SHAPES[i][j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
     out[(i+1)+" "+DEF[i].cue]=sc;
   }
-  var txt="Fixed Phoenix board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
+  var txt="Juventus U10 board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
   var ta=el("exp");
-  function fb(){ta.style.display="block";ta.value=txt;ta.focus();ta.select();setStatus("Copy the text below and paste it to me.");}
+  function fb(){ta.style.display="block";ta.value=txt;ta.focus();ta.select();setStatus("Copy the text below.");}
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(function(){setStatus("Copied. Paste it to me in the chat.");}).catch(fb);
+    navigator.clipboard.writeText(txt).then(function(){setStatus("Copied to clipboard.");}).catch(fb);
   }else{fb();}
 }
 (function(){
