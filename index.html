@@ -31,14 +31,18 @@
   .capbox{margin-top:13px;}
   .capbox h3{font-family:"Oswald",sans-serif;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--gold);}
   .capbox p{font-size:13.5px;color:#d9dade;margin-top:5px;}
-  .hint{font-size:12px;color:var(--muted);margin-top:6px;}
+  .phaserow{display:flex;gap:8px;margin-top:11px;}
+  .pbtn{font-family:"Oswald",sans-serif;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--ink);background:#1b1e25;border:1px solid var(--line);border-radius:999px;padding:6px 18px;cursor:pointer;transition:all .2s;}
+  .pbtn:hover{border-color:var(--gold);}
+  .pbtn.on{background:var(--gold);color:#1a1300;border-color:var(--gold);}
   .tools{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);}
   .tlab{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--muted);margin-right:2px;}
   .tbtn{display:inline-flex;align-items:center;gap:6px;font-family:"Oswald",sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;
     color:var(--ink);background:#1b1e25;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;transition:all .2s;}
   .tbtn:hover{border-color:var(--gold);}
+  .tbtn svg{display:block;}
   .tbtn .sw{width:14px;height:4px;border-radius:2px;display:inline-block;}
-  .tbtn .swr{width:9px;height:9px;border-radius:50%;display:inline-block;}
   .tbtn.del{color:#e6b9ba;}
   .tbtn.del:hover{border-color:var(--red);}
   .tbtn:disabled{opacity:.38;cursor:default;border-color:var(--line);}
@@ -52,19 +56,6 @@
   .keyrow{display:flex;flex-wrap:wrap;gap:9px 15px;justify-content:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);}
   .keyrow span{display:flex;align-items:center;gap:6px;}
   .foot{text-align:center;color:#5d5f67;font-size:11px;margin-top:26px;letter-spacing:.04em;}
-  .guide{margin-top:22px;}
-  .guide h2{font-family:"Oswald",sans-serif;font-weight:700;font-size:20px;color:var(--ink);letter-spacing:.02em;}
-  .guide .lead{color:var(--muted);font-size:13px;margin-top:4px;}
-  .who{font-size:12px;color:#c7c8cd;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:12px;line-height:1.8;}
-  .who b{color:var(--gold);font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.03em;}
-  .gitem{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;cursor:pointer;transition:border-color .2s;}
-  .gitem:hover{border-color:var(--gold);}
-  .gitem h4{font-family:"Oswald",sans-serif;font-weight:700;font-size:15px;color:var(--gold);display:flex;align-items:center;gap:8px;}
-  .gitem h4 .gn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a1300;font-size:12px;flex:0 0 auto;}
-  .gitem ul{margin:8px 0 0 2px;list-style:none;}
-  .gitem li{font-size:13px;color:#d9dade;margin-top:6px;padding-left:14px;position:relative;}
-  .gitem li:before{content:"›";position:absolute;left:0;color:var(--gold);}
-  .gitem li b{color:#f4f4f1;}
   textarea#exp{width:100%;margin-top:10px;background:#0f1116;color:#d9dade;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:11px;min-height:120px;display:none;}
   @media (prefers-reduced-motion: reduce){.pl,.ox{transition:none;}}
 </style>
@@ -73,15 +64,15 @@
 <div class="wrap">
   <div class="kicker">Juventus FC U10 · Matchday Plan</div>
   <h1>Our Plan <span class="num">vs Phoenix FC</span></h1>
-  <p class="sub">Six big moments in the game. Tap one to see where everyone goes — and read the simple plan for each one below.</p>
+  <p class="sub">Tap a moment to see where everyone goes. Some moments have a Before and After — tap those to watch the play happen.</p>
 
   <div class="chips" id="chips">
-    <button class="chip" onclick="go(0)"><span class="n">1</span>Home shape</button>
-    <button class="chip" onclick="go(1)"><span class="n">2</span>Their third</button>
-    <button class="chip" onclick="go(2)"><span class="n">3</span>Diamond</button>
-    <button class="chip" onclick="go(3)"><span class="n">4</span>Squeeze</button>
-    <button class="chip" onclick="go(4)"><span class="n">5</span>Their kickoff</button>
-    <button class="chip" onclick="go(5)"><span class="n">6</span>Our kickoff</button>
+    <button class="chip" onclick="go(0)"><span class="n">1</span>Positions</button>
+    <button class="chip" onclick="go(1)"><span class="n">2</span>Push up</button>
+    <button class="chip" onclick="go(2)"><span class="n">3</span>Squeeze</button>
+    <button class="chip" onclick="go(3)"><span class="n">4</span>Their kickoff</button>
+    <button class="chip" onclick="go(4)"><span class="n">5</span>Our kickoff</button>
+    <button class="chip" onclick="go(5)"><span class="n">6</span>Free draw</button>
   </div>
 
   <div class="board">
@@ -119,8 +110,8 @@
       </g>
       <rect x="150" y="11" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
       <rect x="150" y="584" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
-      <line x1="16" y1="395" x2="344" y2="395" stroke="#f4b740" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="8 7"/>
-      <text x="24" y="389" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">RETREAT LINE</text>
+      <line x1="16" y1="442" x2="344" y2="442" stroke="#f4b740" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="8 7"/>
+      <text x="24" y="436" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">RETREAT LINE</text>
       <text x="180" y="34" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">THEIR GOAL</text>
       <text x="180" y="576" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">OUR GOAL</text>
       <rect x="16" y="606" width="328" height="48" rx="8" fill="#15171c" stroke="#2a2d35"/>
@@ -140,38 +131,44 @@
         <g id="e_o9" class="ox drg" data-kind="node" data-id="o9" transform="translate(328,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
       </g>
 
-      <g font-family="Oswald" font-weight="700" font-size="10" fill="#15171c" text-anchor="middle">
-        <g id="e_st" class="pl drg" data-kind="node" data-id="st" transform="translate(180,225)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">ST</text></g>
-        <g id="e_cam" class="pl drg" data-kind="node" data-id="cam" transform="translate(180,312)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CAM</text></g>
-        <g id="e_lm" class="pl drg" data-kind="node" data-id="lm" transform="translate(46,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">LM</text></g>
-        <g id="e_rm" class="pl drg" data-kind="node" data-id="rm" transform="translate(314,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">RM</text></g>
-        <g id="e_dm" class="pl drg" data-kind="node" data-id="dm" transform="translate(180,395)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CDM</text></g>
-        <g id="e_lb" class="pl drg" data-kind="node" data-id="lb" transform="translate(108,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">LB</text></g>
-        <g id="e_cb" class="pl drg" data-kind="node" data-id="cb" transform="translate(180,485)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CB</text></g>
-        <g id="e_rb" class="pl drg" data-kind="node" data-id="rb" transform="translate(252,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">RB</text></g>
-        <g id="e_gk" class="pl drg" data-kind="node" data-id="gk" transform="translate(180,548)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#5a6472" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/><text y="3.5" fill="#ffffff">GK</text></g>
+      <g font-family="Oswald" font-weight="700" font-size="10" fill="#ffffff" text-anchor="middle">
+        <g id="e_st" class="pl drg" data-kind="node" data-id="st" transform="translate(180,225)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">ST</text></g>
+        <g id="e_cam" class="pl drg" data-kind="node" data-id="cam" transform="translate(180,312)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">CAM</text></g>
+        <g id="e_lm" class="pl drg" data-kind="node" data-id="lm" transform="translate(46,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">LM</text></g>
+        <g id="e_rm" class="pl drg" data-kind="node" data-id="rm" transform="translate(314,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">RM</text></g>
+        <g id="e_dm" class="pl drg" data-kind="node" data-id="dm" transform="translate(180,395)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">CDM</text></g>
+        <g id="e_lb" class="pl drg" data-kind="node" data-id="lb" transform="translate(108,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">LB</text></g>
+        <g id="e_cb" class="pl drg" data-kind="node" data-id="cb" transform="translate(180,485)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">CB</text></g>
+        <g id="e_rb" class="pl drg" data-kind="node" data-id="rb" transform="translate(252,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#0c0d10" stroke="#f4f4f1" stroke-width="1.5"/><text y="3.5">RB</text></g>
+        <g id="e_gk" class="pl drg" data-kind="node" data-id="gk" transform="translate(180,548)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#0c0d10" stroke="#f4b740" stroke-opacity="0.7" stroke-width="2"/><text y="3.5">GK</text></g>
         <g id="e_ball" class="pl drg" data-kind="node" data-id="ball" transform="translate(180,377)"><circle r="18" fill="#000" fill-opacity="0.01"/><circle r="6.5" fill="#ffffff" stroke="#0c0d10" stroke-width="1.5"/></g>
       </g>
     </svg>
 
     <div class="capbox">
-      <h3 id="cue">Our team shape</h3>
-      <p id="subtxt">Where everyone stands when the game starts.</p>
+      <h3 id="cue">Where we all start</h3>
+      <p id="subtxt"></p>
+
+      <div class="phaserow" id="phaserow" style="display:none">
+        <button class="pbtn" id="beforeBtn" onclick="setPhase(0)">Before</button>
+        <button class="pbtn" id="afterBtn" onclick="setPhase(1)">After</button>
+      </div>
 
       <div class="tools">
-        <span class="tlab">Group</span>
+        <span class="tlab">Shape</span>
         <button class="tbtn" id="diaBtn" onclick="startShape('diamond')"><span class="sw" style="background:#f4b740"></span>Diamond</button>
         <button class="tbtn" id="triBtn" onclick="startShape('triangle')"><span class="sw" style="background:#60a5fa"></span>Triangle</button>
         <button class="tbtn" id="clrShapeBtn" onclick="clearShapes()">Clear shapes</button>
         <button class="tbtn" id="cancelBtn" onclick="cancelShape()" style="display:none">Cancel</button>
       </div>
       <div class="tools">
-        <span class="tlab">Add arrow</span>
-        <button class="tbtn" onclick="addArrow('pass')"><span class="sw" style="background:#f4b740"></span>Pass</button>
-        <button class="tbtn" onclick="addArrow('run')"><span class="sw" style="background:#f4f4f1"></span>Run</button>
-        <button class="tbtn" onclick="addArrow('oppass')"><span class="sw" style="background:#e5484d"></span>Their pass</button>
-        <button class="tbtn" onclick="addArrow('lane')"><span class="swr" style="background:#e5484d"></span>Lane</button>
-        <button class="tbtn del" id="delbtn" onclick="delArrow()" disabled>Delete arrow</button>
+        <span class="tlab">Arrow</span>
+        <button class="tbtn" onclick="addArrow('pass')"><svg width="22" height="8"><line x1="1" y1="4" x2="15" y2="4" stroke="#f4b740" stroke-width="2.5"/><path d="M15,1 L21,4 L15,7 Z" fill="#f4b740"/></svg>Our pass</button>
+        <button class="tbtn" onclick="addArrow('run')"><svg width="22" height="8"><line x1="1" y1="4" x2="15" y2="4" stroke="#f4f4f1" stroke-width="2" stroke-dasharray="3 2.5"/><path d="M15,1 L21,4 L15,7 Z" fill="#f4f4f1"/></svg>Run</button>
+        <button class="tbtn" onclick="addArrow('oppass')"><svg width="22" height="8"><line x1="1" y1="4" x2="15" y2="4" stroke="#e5484d" stroke-width="2.5"/><path d="M15,1 L21,4 L15,7 Z" fill="#e5484d"/></svg>Their pass</button>
+        <button class="tbtn" onclick="addArrow('lane')"><svg width="22" height="8"><circle cx="2" cy="4" r="2" fill="#e5484d"/><line x1="4" y1="4" x2="18" y2="4" stroke="#e5484d" stroke-width="2" stroke-dasharray="3 3"/><circle cx="20" cy="4" r="2" fill="#e5484d"/></svg>Lane</button>
+        <button class="tbtn del" id="delbtn" onclick="delArrow()" disabled>Delete</button>
+        <button class="tbtn del" id="clrArrBtn" onclick="clearArrows()">Clear arrows</button>
       </div>
 
       <div class="btnrow">
@@ -182,81 +179,15 @@
       <textarea id="exp" readonly></textarea>
     </div>
     <div class="keyrow">
-      <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#f4f4f1" stroke="#0c0d10"/></svg>Us</span>
+      <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#0c0d10" stroke="#f4f4f1"/></svg>Us</span>
       <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#e5484d" stroke="#3a1011"/></svg>Phoenix</span>
       <span><svg width="16" height="16"><circle cx="8" cy="8" r="5" fill="#fff" stroke="#0c0d10"/></svg>Ball</span>
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4b740" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4b740"/></svg>Our pass</span>
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#e5484d" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#e5484d"/></svg>Their pass</span>
       <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4f4f1" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4f4f1"/></svg>Run / press</span>
-      <span><svg width="26" height="10"><line x1="1" y1="5" x2="25" y2="5" stroke="#e5484d" stroke-width="2" stroke-dasharray="4 4"/></svg>Passing lane</span>
+      <span><svg width="26" height="10"><circle cx="3" cy="5" r="2" fill="#e5484d"/><line x1="5" y1="5" x2="21" y2="5" stroke="#e5484d" stroke-width="2" stroke-dasharray="3 3"/><circle cx="23" cy="5" r="2" fill="#e5484d"/></svg>Passing lane</span>
       <span><svg width="16" height="16"><polygon points="8,2 14,8 8,14 2,8" fill="none" stroke="#f4b740" stroke-width="1.6"/></svg>Diamond</span>
       <span><svg width="16" height="16"><polygon points="8,3 14,13 2,13" fill="none" stroke="#60a5fa" stroke-width="1.6"/></svg>Triangle</span>
-    </div>
-  </div>
-
-  <div class="guide">
-    <h2>What's the plan?</h2>
-    <p class="lead">Tap any plan to see it on the board.</p>
-    <div class="who">
-      <b>GK</b> keeper · <b>LB CB RB</b> defenders · <b>CDM</b> deep middle · <b>LM RM</b> side middle · <b>CAM</b> top middle · <b>ST</b> striker
-    </div>
-
-    <div class="gitem" onclick="show(0)">
-      <h4><span class="gn">1</span>Our team shape</h4>
-      <ul>
-        <li>This is how we stand when the game starts.</li>
-        <li>3 defenders at the back, 4 players in the middle, 1 striker up top.</li>
-        <li>Every plan below starts from this shape.</li>
-      </ul>
-    </div>
-
-    <div class="gitem" onclick="show(1)">
-      <h4><span class="gn">2</span>Ball near their goal — everyone up!</h4>
-      <ul>
-        <li><b>Keeper:</b> run out to our retreat line and stand behind the defenders like an extra defender. Don't hide by the goal. Up there you can only kick or head the ball — no hands. If a ball goes behind us, sprint back and clear it.</li>
-        <li><b>Defenders (LB, CB, RB):</b> move all the way up to the middle line and push the team forward. The space behind is fine — the keeper covers it. If a ball gets through, run back fast, win it safely, and kick it away.</li>
-      </ul>
-    </div>
-
-    <div class="gitem" onclick="show(2)">
-      <h4><span class="gn">3</span>Make the diamond</h4>
-      <ul>
-        <li>When we have the ball and want to attack (even on kick-ins), the middle four make a diamond:</li>
-        <li><b>CDM</b> is the bottom, closest to our goal.</li>
-        <li><b>CAM</b> is the top, closest to their goal.</li>
-        <li><b>LM and RM</b> are the two sides, out wide.</li>
-        <li><b>Striker</b> stays highest of all, on the same side as the ball.</li>
-        <li>Keep the diamond as the ball moves around.</li>
-      </ul>
-    </div>
-
-    <div class="gitem" onclick="show(3)">
-      <h4><span class="gn">4</span>Squeeze and block</h4>
-      <ul>
-        <li>When they have the ball, everyone squeezes in close together.</li>
-        <li>Stand in the way of their passes — leave no gaps.</li>
-        <li>Same job on their kick-ins.</li>
-      </ul>
-    </div>
-
-    <div class="gitem" onclick="show(4)">
-      <h4><span class="gn">5</span>Their kickoff</h4>
-      <ul>
-        <li>Our mids and striker make a straight line of five — one player in each lane.</li>
-        <li>The fullbacks (LB, RB) step up behind, each staying in their own lane.</li>
-        <li>The keeper waits on our retreat line.</li>
-        <li>Watch the ball AND your player. The closest one runs at the ball right away; everyone else sprints in to help.</li>
-      </ul>
-    </div>
-
-    <div class="gitem" onclick="show(5)">
-      <h4><span class="gn">6</span>Our kickoff</h4>
-      <ul>
-        <li>The striker kicks off and passes the ball straight back to the CDM — every time.</li>
-        <li>Not sure who the CDM is? Just ask!</li>
-        <li>The CAM and CDM swap spots each kickoff to confuse Phoenix.</li>
-        <li>Once the CDM has the ball, we go straight into our diamond (plan 3).</li>
-      </ul>
     </div>
   </div>
 
@@ -266,7 +197,7 @@
 var SVGNS="http://www.w3.org/2000/svg";
 var IDS=["st","cam","lm","rm","dm","lb","cb","rb","gk","ball","o1","o2","o3","o4","o5","o6","o7","o8","o9"];
 var NAMES={st:"ST",cam:"CAM",lm:"LM",rm:"RM",dm:"CDM",lb:"LB",cb:"CB",rb:"RB",gk:"GK",ball:"Ball",o1:"X1",o2:"X2",o3:"X3",o4:"X4",o5:"X5",o6:"X6",o7:"X7",o8:"X8",o9:"X9"};
-var SKEY="juve-phoenix-board-v2";
+var SKEY="juve-phoenix-board-v3";
 // Browser fallback: the host injects window.storage; when missing (plain browser), use localStorage with the same Promise-based get/set interface so saving still works.
 if(!window.storage){
   try{
@@ -276,63 +207,51 @@ if(!window.storage){
     };
   }catch(e){}
 }
-var DEF=[
- {cue:"Our team shape",
-  sub:"Where everyone stands when the game starts. Three at the back, four in the middle, one striker up top. Every plan starts from here.",
-  pos:{st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,377],o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[220,636],o7:[256,636],o8:[292,636],o9:[328,636]},
-  arr:[]},
- {cue:"Ball near their goal — everyone up!",
-  sub:"When we have the ball near their goal, the whole team pushes up. The keeper runs out to help. Our three defenders move up to the middle line. The space behind is okay — the keeper has it.",
-  pos:{st:[222,92],cam:[198,165],lm:[46,140],rm:[314,140],dm:[180,255],lb:[108,312],cb:[180,324],rb:[252,312],gk:[180,410],ball:[252,98],o1:[274,104],o2:[140,128],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
-  arr:[]},
- {cue:"Make the diamond",
-  sub:"To attack, the middle four make a diamond: CDM at the bottom, CAM at the top, LM and RM out to the sides. The striker stays highest, on the same side as the ball.",
-  pos:{st:[235,240],cam:[180,290],lm:[70,345],rm:[290,345],dm:[180,400],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[254,452],o1:[218,330],o2:[40,636],o3:[76,636],o4:[112,636],o5:[148,636],o6:[184,636],o7:[220,636],o8:[256,636],o9:[292,636]},
-  arr:[]},
- {cue:"Squeeze and block",
-  sub:"When they have the ball, everyone squeezes in close and stands in the way of their passes. The closest player runs at the ball. Leave them no gaps.",
-  pos:{st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[281,337],o1:[292,330],o2:[222,252],o3:[148,302],o4:[238,392],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
-  arr:[{k:"lane",f:"o1",t:"o2"},{k:"lane",f:"o1",t:"o3"},{k:"lane",f:"o1",t:"o4"},{k:"press",f:"rm",t:"ball"}]},
- {cue:"Their kickoff",
-  sub:"Our mids and striker make a straight line of five, one player in each lane. LB and RB step up behind them. The keeper waits on our retreat line. The moment the ball moves, the closest player runs at it and everyone else sprints in to help.",
-  pos:{lm:[46,345],dm:[113,345],st:[180,345],cam:[247,345],rm:[314,345],lb:[108,380],cb:[180,386],rb:[252,380],gk:[180,420],ball:[138,244],o1:[167,289],o2:[196,289],o3:[128,232],o4:[262,224],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
-  arr:[{k:"oppass",f:[180,300],t:"ball"},{k:"press",f:"dm",t:"ball"},{k:"nudge",f:"lm"},{k:"nudge",f:"st"}]},
- {cue:"Our kickoff",
-  sub:"The striker kicks off and passes the ball back to the CDM, every time. Not sure who that is? Just ask! Then we go straight into our diamond and attack.",
-  pos:{st:[166,318],lm:[46,400],dm:[113,400],cam:[247,400],rm:[314,400],lb:[108,478],cb:[180,492],rb:[252,478],gk:[180,548],ball:[180,301],o1:[168,282],o2:[214,272],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
-  arr:[{k:"pass",f:"ball",t:"dm"}]}
+// Opponents not used in a moment sit on the bench (y=636) and are hidden from the export.
+var BENCH={o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[220,636],o7:[256,636],o8:[292,636],o9:[328,636]};
+function P(o){var z={},k;for(k in BENCH){z[k]=BENCH[k].slice();}for(k in o){z[k]=o[k].slice();}return z;}
+// Each moment has one or more phases (Before / After). Arrows are stored as pixel coordinates; shapes reference player ids.
+var SCN=[
+ {name:"Positions",cue:"Where we all start",
+  sub:"This is the spot each player calls home — roughly where you stand when nothing big is happening. It's only a starting point, not a cage. When you see space, go fill it: make overlapping runs, swap spots, and cover for a teammate who has gone forward. Just always know your home spot so you can get back to it.",
+  phases:[{pos:P({st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,377]}),arr:[],shapes:[]}]},
+
+ {name:"Push up",cue:"Ball near their goal — everyone up!",
+  sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us — up there it's feet and head only, no hands. The striker makes the diamond: the LM can't cross into the middle, so instead he runs into the goal box to be dangerous. Remember, a diamond can be made by whoever is closest — it doesn't have to be the same players every time.",
+  phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
+
+ {name:"Squeeze",cue:"Squeeze and defend",
+  sub:"This is how we defend any time Phoenix has the ball, anywhere on the field. The closest player runs straight at the ball. Everyone else squeezes in tight, stays between Phoenix and our goal, and blocks the passing lanes so they have nowhere to go. Tap Before and After to see us close them down.",
+  phases:[
+   {pos:P({st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[289,299],o1:[319,269],o2:[222,252],o3:[148,302],o4:[238,392]}),arr:[],shapes:[]},
+   {pos:P({st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[281,337],o1:[292,330],o2:[222,252],o3:[148,302],o4:[238,392]}),arr:[{t:"lane",x1:283,y1:320,x2:231,y2:262},{t:"lane",x1:283,y1:341,x2:247,y2:381},{t:"run",x1:293,y1:351,x2:288,y2:345}],shapes:[]}
+  ]},
+
+ {name:"Their kickoff",cue:"Their kickoff",
+  sub:"When Phoenix kicks off, watch the ball AND your player. The moment the ball moves, the player closest to it runs straight at it and everyone else sprints in to squeeze and cover — exactly like the Squeeze plan. The keeper waits on our retreat line.",
+  phases:[{pos:P({lm:[311,321],dm:[112,311],st:[180,345],cam:[246,317],rm:[49,318],lb:[77,388],cb:[183,398],rb:[280,390],gk:[184,451],ball:[145,219],o1:[227,188],o2:[177,289],o3:[67,224],o4:[291,222],o5:[137,190],o6:[177,41],o7:[98,132],o8:[178,112],o9:[248,143]}),arr:[{t:"oppass",x1:177,y1:292,x2:142,y2:197},{t:"run",x1:122,y1:305,x2:138,y2:227}],shapes:[]}]},
+
+ {name:"Our kickoff",cue:"Our kickoff",
+  sub:"The striker kicks off and passes straight back to the CDM — every time, never to the CAM. The CAM already knows the ball isn't coming to him, so he sprints higher than the CDM. The winger on the far side sprints inside to fill the gap between the CDM and CAM. Together we make our diamond and attack. Tap Before and After to watch us build the shape.",
+  phases:[
+   {pos:P({st:[166,318],lm:[46,400],dm:[113,400],cam:[247,400],rm:[314,400],lb:[108,478],cb:[180,492],rb:[252,478],gk:[180,548],ball:[180,301],o1:[168,282],o2:[214,272]}),arr:[{t:"pass",x1:175,y1:308,x2:123,y2:385}],shapes:[]},
+   {pos:P({st:[76,254],lm:[46,335],dm:[98,394],cam:[143,311],rm:[191,380],lb:[47,465],cb:[158,446],rb:[253,430],gk:[180,548],ball:[108,372],o1:[168,282],o2:[214,272]}),arr:[],shapes:[{type:"diamond",ids:["lm","cam","dm","rm"]},{type:"triangle",ids:["st","lm","cam"]},{type:"triangle",ids:["dm","rm","cb"]}]}
+  ]},
+
+ {name:"Free draw",cue:"Free draw",
+  sub:"A blank board to draw your own play. Move anyone, add arrows and shapes, and use Clear arrows to wipe it and start again.",
+  phases:[{pos:P({st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,300]}),arr:[],shapes:[]}]}
 ];
-var POS=[], ARR=[], SHAPES=[], cur=0, sel=-1;
-var DEFSHAPES=[[],[],[{type:"diamond",ids:["dm","lm","cam","rm"]}],[],[],[]];
-var buildType=null, buildSel=[];
+var STATE=[], cur=0, sel=-1, buildType=null, buildSel=[];
 var SHCOL={diamond:"#f4b740",triangle:"#60a5fa"};
 var canStore=!!(window.storage&&window.storage.set);
 function clone(o){return JSON.parse(JSON.stringify(o));}
 function r(n){return Math.round(n);}
 function el(id){return document.getElementById(id);}
 function setStatus(t){el("status").textContent=t;}
-function findPoly(scene){var A=DEF[scene].arr;for(var i=0;i<A.length;i++){if(A[i].k==="poly")return A[i];}return null;}
-function vp(scene,ref){return (typeof ref==="string")?DEF[scene].pos[ref].slice():ref.slice();}
-function unit(a,b){var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.sqrt(dx*dx+dy*dy)||1;return [dx/L,dy/L,L];}
-function buildArrows(scene){
-  var out=[],specs=DEF[scene].arr,i,s;
-  for(i=0;i<specs.length;i++){
-    s=specs[i];
-    if(s.k==="poly"){continue;}
-    if(s.k==="nudge"){
-      var p0=vp(scene,s.f), b=vp(scene,"ball"), u=unit(p0,b);
-      if(u[2]>40){out.push({t:"run",x1:r(p0[0]+u[0]*18),y1:r(p0[1]+u[1]*18),x2:r(p0[0]+u[0]*46),y2:r(p0[1]+u[1]*46)});}
-      continue;
-    }
-    var f=vp(scene,s.f), t=vp(scene,s.t), uu=unit(f,t), sF,sT,ty;
-    if(s.k==="pass"){sF=9;sT=18;ty="pass";}
-    else if(s.k==="press"){sF=18;sT=11;ty="run";}
-    else if(s.k==="oppass"){sF=4;sT=11;ty="oppass";}
-    else if(s.k==="lane"){sF=14;sT=14;ty="lane";}
-    else{sF=10;sT=14;ty="run";}
-    out.push({t:ty,x1:r(f[0]+uu[0]*sF),y1:r(f[1]+uu[1]*sF),x2:r(t[0]-uu[0]*sT),y2:r(t[1]-uu[1]*sT)});
-  }
-  return out;
+function CS(){return STATE[cur].ph[STATE[cur].i];}
+function buildState(){
+  STATE=SCN.map(function(s){return {i:0,ph:s.phases.map(function(p){return {pos:clone(p.pos),arr:clone(p.arr),shapes:clone(p.shapes)};})};});
 }
 function mkEl(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs){e.setAttribute(k,attrs[k]);}return e;}
 function styleArrow(ln,t){
@@ -343,109 +262,122 @@ function styleArrow(ln,t){
   else if(t==="lane"){ln.setAttribute("stroke","#e5484d");ln.setAttribute("stroke-opacity","0.6");ln.setAttribute("stroke-width","2");ln.setAttribute("stroke-dasharray","4 4");}
 }
 function placeNodes(){
-  var p=POS[cur],i;
+  var p=CS().pos,i;
   for(i=0;i<IDS.length;i++){el("e_"+IDS[i]).style.transform="translate("+p[IDS[i]][0]+"px,"+p[IDS[i]][1]+"px)";}
 }
 function shapePts(ids){
-  var P=[],i;for(i=0;i<ids.length;i++){var q=POS[cur][ids[i]];if(q){P.push([q[0],q[1]]);}}
-  if(P.length<3){return null;}
-  var cxv=0,cyv=0;for(i=0;i<P.length;i++){cxv+=P[i][0];cyv+=P[i][1];}cxv/=P.length;cyv/=P.length;
-  P.sort(function(a,b){return Math.atan2(a[1]-cyv,a[0]-cxv)-Math.atan2(b[1]-cyv,b[0]-cxv);});
-  var s="";for(i=0;i<P.length;i++){s+=P[i][0]+","+P[i][1]+" ";}
+  var pos=CS().pos,P2=[],i;for(i=0;i<ids.length;i++){var q=pos[ids[i]];if(q){P2.push([q[0],q[1]]);}}
+  if(P2.length<3){return null;}
+  var cxv=0,cyv=0;for(i=0;i<P2.length;i++){cxv+=P2[i][0];cyv+=P2[i][1];}cxv/=P2.length;cyv/=P2.length;
+  P2.sort(function(a,b){return Math.atan2(a[1]-cyv,a[0]-cxv)-Math.atan2(b[1]-cyv,b[0]-cxv);});
+  var s="";for(i=0;i<P2.length;i++){s+=P2[i][0]+","+P2[i][1]+" ";}
   return s;
 }
 function renderArrows(){
   var L=el("arrLayer");while(L.firstChild){L.removeChild(L.firstChild);}
-  var i,a;
-  var SH=SHAPES[cur];
+  var i,a,cs=CS();
+  var SH=cs.shapes;
   for(i=0;i<SH.length;i++){
     var spts=shapePts(SH[i].ids);if(!spts){continue;}
     var scol=SHCOL[SH[i].type]||"#f4b740";
     L.appendChild(mkEl("polygon",{points:spts,fill:scol,"fill-opacity":"0.07",stroke:scol,"stroke-opacity":"0.65","stroke-width":"2","stroke-dasharray":"6 5","stroke-linejoin":"round"}));
   }
-  var A=ARR[cur];
+  var A=cs.arr;
   if(sel>=0&&A[sel]){a=A[sel];L.appendChild(mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2,stroke:"#f4b740","stroke-opacity":"0.28","stroke-width":"9","stroke-linecap":"round"}));}
-  for(i=0;i<A.length;i++){a=A[i];var ln=mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2});styleArrow(ln,a.t);L.appendChild(ln);}
+  for(i=0;i<A.length;i++){a=A[i];var ln=mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2});styleArrow(ln,a.t);L.appendChild(ln);
+    if(a.t==="lane"){L.appendChild(mkEl("circle",{cx:a.x1,cy:a.y1,r:"2.6",fill:"#e5484d","pointer-events":"none"}));L.appendChild(mkEl("circle",{cx:a.x2,cy:a.y2,r:"2.6",fill:"#e5484d","pointer-events":"none"}));}
+  }
   for(i=0;i<A.length;i++){a=A[i];var hb=mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2,stroke:"#000","stroke-opacity":"0.001","stroke-width":"18","stroke-linecap":"round"});hb.setAttribute("class","drg");hb.dataset.kind="ab";hb.dataset.i=i;L.appendChild(hb);}
   for(i=0;i<A.length;i++){a=A[i];
     var ends=[[a.x1,a.y1,"1"],[a.x2,a.y2,"2"]];
     for(var e=0;e<2;e++){
-      var h=ends[e],big=(i===sel);
+      var h=ends[e];
       var hit=mkEl("circle",{cx:h[0],cy:h[1],r:"15",fill:"#000","fill-opacity":"0.001"});hit.setAttribute("class","drg");hit.dataset.kind="ah";hit.dataset.i=i;hit.dataset.end=h[2];L.appendChild(hit);
-      L.appendChild(mkEl("circle",{cx:h[0],cy:h[1],r:big?"7":"5",fill:big?"#f4b740":"#0f1116",stroke:"#f4b740","stroke-width":"2","pointer-events":"none"}));
+      if(i===sel){L.appendChild(mkEl("circle",{cx:h[0],cy:h[1],r:"4.5",fill:"#f4b740",stroke:"#0c0d10","stroke-width":"1.5","pointer-events":"none"}));}
     }
   }
   if(buildType){
     var bc=SHCOL[buildType];
-    for(i=0;i<buildSel.length;i++){var bq=POS[cur][buildSel[i]];if(bq){L.appendChild(mkEl("circle",{cx:bq[0],cy:bq[1],r:"21",fill:"none",stroke:bc,"stroke-width":"3","stroke-opacity":"0.95","pointer-events":"none"}));}}
+    for(i=0;i<buildSel.length;i++){var bq=cs.pos[buildSel[i]];if(bq){L.appendChild(mkEl("circle",{cx:bq[0],cy:bq[1],r:"21",fill:"none",stroke:bc,"stroke-width":"3","stroke-opacity":"0.95","pointer-events":"none"}));}}
   }
 }
 function render(){
   placeNodes();renderArrows();
-  el("cue").textContent=DEF[cur].cue;
-  el("subtxt").textContent=DEF[cur].sub;
+  el("cue").textContent=SCN[cur].cue;
+  el("subtxt").textContent=SCN[cur].sub;
   el("delbtn").disabled=(sel<0);
   el("cancelBtn").style.display=buildType?"inline-flex":"none";
   el("diaBtn").classList.toggle("act",buildType==="diamond");
   el("triBtn").classList.toggle("act",buildType==="triangle");
+  var multi=SCN[cur].phases.length>1;
+  el("phaserow").style.display=multi?"flex":"none";
+  if(multi){el("beforeBtn").className="pbtn"+(STATE[cur].i===0?" on":"");el("afterBtn").className="pbtn"+(STATE[cur].i===1?" on":"");}
   var chips=el("chips").getElementsByTagName("button"),c;
   for(c=0;c<chips.length;c++){chips[c].className=(c===cur)?"chip on":"chip";}
 }
 function go(i){cur=i;sel=-1;buildType=null;buildSel=[];el("exp").style.display="none";render();}
-function show(i){go(i);var b=document.querySelector(".board");if(b&&b.scrollIntoView){b.scrollIntoView({behavior:"smooth",block:"start"});}}
+function setPhase(p){STATE[cur].i=p;sel=-1;buildType=null;buildSel=[];render();}
 function addArrow(t){
-  ARR[cur].push({t:t,x1:150,y1:344,x2:200,y2:280});
-  sel=ARR[cur].length-1;render();save();
+  CS().arr.push({t:t,x1:150,y1:344,x2:200,y2:280});
+  sel=CS().arr.length-1;render();save();
   setStatus("Arrow added. Drag its ends to place it.");
 }
-function delArrow(){if(sel<0){return;}ARR[cur].splice(sel,1);sel=-1;render();save();setStatus("Arrow deleted.");}
+function delArrow(){if(sel<0){return;}CS().arr.splice(sel,1);sel=-1;render();save();setStatus("Arrow deleted.");}
+function clearArrows(){CS().arr=[];sel=-1;render();save();setStatus("Arrows cleared.");}
 function startShape(t){buildType=t;buildSel=[];sel=-1;render();setStatus("Tap "+(t==="triangle"?3:4)+" players for the "+t+", or tap Cancel.");}
 function cancelShape(){buildType=null;buildSel=[];render();setStatus("Cancelled.");}
-function clearShapes(){SHAPES[cur]=[];buildType=null;buildSel=[];render();save();setStatus("Shapes cleared. Pick a new group if you like.");}
-function resetScene(){POS[cur]=clone(DEF[cur].pos);ARR[cur]=buildArrows(cur);SHAPES[cur]=clone(DEFSHAPES[cur]);sel=-1;buildType=null;buildSel=[];render();save();setStatus("Moment reset.");}
+function clearShapes(){CS().shapes=[];buildType=null;buildSel=[];render();save();setStatus("Shapes cleared.");}
+function resetScene(){
+  STATE[cur]={i:0,ph:SCN[cur].phases.map(function(p){return {pos:clone(p.pos),arr:clone(p.arr),shapes:clone(p.shapes)};})};
+  sel=-1;buildType=null;buildSel=[];render();save();setStatus("Moment reset.");
+}
 function save(){
   if(!canStore){setStatus("Saving is off here. Use Copy positions.");return;}
   try{
-    window.storage.set(SKEY,JSON.stringify({v:2,pos:POS,arr:ARR,shapes:SHAPES})).then(function(rr){
+    window.storage.set(SKEY,JSON.stringify({v:3,state:STATE})).then(function(rr){
       setStatus(rr?"Saved.":"Save failed. Use Copy positions.");
     }).catch(function(){setStatus("Save failed. Use Copy positions.");});
   }catch(e){setStatus("Save failed. Use Copy positions.");}
 }
-function initData(){
-  POS=[];ARR=[];SHAPES=[];
-  for(var i=0;i<DEF.length;i++){POS.push(clone(DEF[i].pos));ARR.push(buildArrows(i));SHAPES.push(clone(DEFSHAPES[i]));}
+function fillMissing(){
+  for(var i=0;i<SCN.length;i++){
+    for(var j=0;j<SCN[i].phases.length;j++){
+      var dp=SCN[i].phases[j].pos,st=STATE[i]&&STATE[i].ph[j]&&STATE[i].ph[j].pos;
+      if(!st){continue;}
+      for(var n=0;n<IDS.length;n++){var id=IDS[n];if(!st[id]){st[id]=dp[id]?dp[id].slice():[180,300];}}
+    }
+  }
 }
 function loadSaved(){
-  initData();
+  buildState();
   if(!canStore){render();return;}
   try{
     window.storage.get(SKEY).then(function(rr){
       try{
-        var d=JSON.parse(rr.value);
-        if(d&&d.pos&&d.pos.length===DEF.length&&d.arr&&d.arr.length===DEF.length){
-          POS=d.pos;ARR=d.arr;
-          if(d.shapes&&d.shapes.length===DEF.length){SHAPES=d.shapes;}
-          for(var s=0;s<DEF.length;s++){for(var key in DEF[s].pos){if(!POS[s][key]){POS[s][key]=DEF[s].pos[key].slice();}}}
-          setStatus("Loaded your saved fixes.");
-        }
+        var d=JSON.parse(rr.value),ok=d&&d.v===3&&d.state&&d.state.length===SCN.length;
+        if(ok){for(var i=0;i<SCN.length;i++){if(!d.state[i]||!d.state[i].ph||d.state[i].ph.length!==SCN[i].phases.length){ok=false;break;}}}
+        if(ok){STATE=d.state;for(var s=0;s<STATE.length;s++){if(typeof STATE[s].i!=="number"){STATE[s].i=0;}}fillMissing();setStatus("Loaded your saved board.");}
       }catch(e){}
       render();
     }).catch(function(){render();});
   }catch(e){render();}
 }
 function copyAll(){
-  var out={},i,k,j;
-  for(i=0;i<DEF.length;i++){
-    var sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
-    for(k in POS[i]){
-      var rp=[r(POS[i][k][0]),r(POS[i][k][1])];
-      if(k==="ball"){sc.ball=rp;}
-      else if(k.charAt(0)==="o"){if(POS[i][k][1]<600){sc.opponents[NAMES[k]]=rp;}}
-      else{sc.players[NAMES[k]]=rp;}
+  var out={},i,j,k,p;
+  for(i=0;i<SCN.length;i++){
+    var multi=SCN[i].phases.length>1;
+    for(p=0;p<STATE[i].ph.length;p++){
+      var ph=STATE[i].ph[p],sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
+      for(k in ph.pos){
+        var rp=[r(ph.pos[k][0]),r(ph.pos[k][1])];
+        if(k==="ball"){sc.ball=rp;}
+        else if(k.charAt(0)==="o"){if(ph.pos[k][1]<600){sc.opponents[NAMES[k]]=rp;}}
+        else{sc.players[NAMES[k]]=rp;}
+      }
+      for(j=0;j<ph.arr.length;j++){var a=ph.arr[j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
+      for(j=0;j<ph.shapes.length;j++){var shh=ph.shapes[j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
+      out[(i+1)+" "+SCN[i].name+(multi?" ("+(p===0?"before":"after")+")":"")]=sc;
     }
-    for(j=0;j<ARR[i].length;j++){var a=ARR[i][j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
-    for(j=0;j<SHAPES[i].length;j++){var shh=SHAPES[i][j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
-    out[(i+1)+" "+DEF[i].cue]=sc;
   }
   var txt="Juventus U10 board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
   var ta=el("exp");
@@ -469,7 +401,7 @@ function copyAll(){
           buildSel.push(pid);
           var need=(buildType==="triangle")?3:4;
           if(buildSel.length>=need){
-            SHAPES[cur].push({type:buildType,ids:buildSel.slice()});
+            CS().shapes.push({type:buildType,ids:buildSel.slice()});
             var made=buildType;buildType=null;buildSel=[];render();save();
             setStatus((made==="triangle"?"Triangle":"Diamond")+" added. It follows the players when you drag them.");
           }else{
@@ -483,11 +415,11 @@ function copyAll(){
     e.preventDefault();
     var k=g.dataset.kind;
     if(k==="node"){
-      mode="node";nid=g.dataset.id;var m=svgXY(e),p=POS[cur][nid];grab=[m[0]-p[0],m[1]-p[1]];el("e_"+nid).style.transition="none";
+      mode="node";nid=g.dataset.id;var m=svgXY(e),p=CS().pos[nid];grab=[m[0]-p[0],m[1]-p[1]];el("e_"+nid).style.transition="none";
     }else if(k==="ah"){
       mode="ah";ai=+g.dataset.i;aend=g.dataset.end;sel=ai;render();el("delbtn").disabled=false;
     }else if(k==="ab"){
-      mode="ab";ai=+g.dataset.i;sel=ai;var mm=svgXY(e),aa=ARR[cur][ai];abS={mx:mm[0],my:mm[1],x1:aa.x1,y1:aa.y1,x2:aa.x2,y2:aa.y2};render();el("delbtn").disabled=false;
+      mode="ab";ai=+g.dataset.i;sel=ai;var mm=svgXY(e),aa=CS().arr[ai];abS={mx:mm[0],my:mm[1],x1:aa.x1,y1:aa.y1,x2:aa.x2,y2:aa.y2};render();el("delbtn").disabled=false;
     }
     if(svg.setPointerCapture){try{svg.setPointerCapture(e.pointerId);}catch(err){}}
   });
@@ -498,14 +430,14 @@ function copyAll(){
     if(mode==="node"){
       var isO=(nid.charAt(0)==="o"),x=cx(r(m[0]-grab[0])),y=r(m[1]-grab[1]);
       if(y<20){y=20;}var ymax=isO?650:580;if(y>ymax){y=ymax;}
-      POS[cur][nid]=[x,y];el("e_"+nid).style.transform="translate("+x+"px,"+y+"px)";
+      CS().pos[nid]=[x,y];el("e_"+nid).style.transform="translate("+x+"px,"+y+"px)";
       renderArrows();
     }else if(mode==="ah"){
-      var a=ARR[cur][ai],x=cx(r(m[0])),y=r(m[1]);if(y<18){y=18;}if(y>598){y=598;}
+      var a=CS().arr[ai],x=cx(r(m[0])),y=r(m[1]);if(y<18){y=18;}if(y>598){y=598;}
       if(aend==="1"){a.x1=x;a.y1=y;}else{a.x2=x;a.y2=y;}
       renderArrows();
     }else if(mode==="ab"){
-      var b=ARR[cur][ai],dx=r(m[0]-abS.mx),dy=r(m[1]-abS.my);
+      var b=CS().arr[ai],dx=r(m[0]-abS.mx),dy=r(m[1]-abS.my);
       b.x1=abS.x1+dx;b.y1=abS.y1+dy;b.x2=abS.x2+dx;b.y2=abS.y2+dy;
       renderArrows();
     }
