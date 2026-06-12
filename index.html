@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juventus FC U10 · Board Editor · Phoenix FC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0c0d10;--panel:#15171c;--ink:#ededef;--muted:#a0a2a9;--line:#2a2d35;--gold:#f4b740;--red:#e5484d;--white:#f4f4f1;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 50% -8%, #1a1d24 0%, var(--bg) 55%);color:var(--ink);
+    font-family:"Manrope","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;padding:24px 14px 50px;line-height:1.5;}
+  .wrap{max-width:560px;margin:0 auto;}
+  .kicker{font-family:"Oswald",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:600;}
+  h1{font-family:"Oswald",sans-serif;font-weight:700;font-size:30px;line-height:1.05;margin-top:6px;}
+  h1 .num{color:var(--gold);}
+  .sub{color:var(--muted);font-size:14px;margin-top:8px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 14px;}
+  .chip{font-family:"Oswald",sans-serif;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;transition:all .2s;}
+  .chip:hover{border-color:var(--gold);}
+  .chip.on{background:var(--gold);color:#1a1300;border-color:var(--gold);}
+  .chip .n{opacity:.55;margin-right:5px;}
+  .board{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 16px 40px rgba(0,0,0,.4);}
+  svg.pitch{display:block;width:100%;max-width:360px;height:auto;margin:0 auto;border-radius:10px;
+    -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none;}
+  .pl,.ox{transition:transform .7s cubic-bezier(.45,0,.2,1);}
+  .drg{cursor:grab;}
+  .capbox{margin-top:13px;}
+  .capbox h3{font-family:"Oswald",sans-serif;font-weight:700;font-size:19px;letter-spacing:.02em;color:var(--gold);}
+  .capbox p{font-size:13.5px;color:#d9dade;margin-top:5px;}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px;}
+  .tools{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);}
+  .tlab{font-family:"Oswald",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px;color:var(--muted);margin-right:2px;}
+  .tbtn{display:inline-flex;align-items:center;gap:6px;font-family:"Oswald",sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink);background:#1b1e25;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;transition:all .2s;}
+  .tbtn:hover{border-color:var(--gold);}
+  .tbtn .sw{width:14px;height:4px;border-radius:2px;display:inline-block;}
+  .tbtn .swr{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .tbtn.del{color:#e6b9ba;}
+  .tbtn.del:hover{border-color:var(--red);}
+  .tbtn:disabled{opacity:.38;cursor:default;border-color:var(--line);}
+  .tbtn.act{border-color:#ededef;color:#fff;background:#23262e;}
+  .btnrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;}
+  .obtn{font-family:"Oswald",sans-serif;font-weight:600;font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--gold);background:transparent;border:1px solid var(--gold);border-radius:999px;padding:7px 13px;cursor:pointer;}
+  .obtn.fill{background:var(--gold);color:#1a1300;}
+  .obtn.ghost{color:var(--muted);border-color:var(--line);}
+  .status{font-size:12px;color:var(--muted);}
+  .keyrow{display:flex;flex-wrap:wrap;gap:9px 15px;justify-content:center;margin-top:12px;padding-top:11px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);}
+  .keyrow span{display:flex;align-items:center;gap:6px;}
+  .foot{text-align:center;color:#5d5f67;font-size:11px;margin-top:26px;letter-spacing:.04em;}
+  textarea#exp{width:100%;margin-top:10px;background:#0f1116;color:#d9dade;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:11px;min-height:120px;display:none;}
+  @media (prefers-reduced-motion: reduce){.pl,.ox{transition:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Juventus FC U10 · Coach Edit Mode</div>
+  <h1>Fix the Board <span class="num">vs Phoenix FC</span></h1>
+  <p class="sub">Drag the dots, ours, theirs, or the ball, and drag the arrows too: grab an arrow end to re-aim it, or its middle to slide it. Add or delete arrows per moment. Each moment keeps your fix. When it looks right, tap Copy and paste it to me, and I will update the matchday board and the printed sheet.</p>
+
+  <div class="chips" id="chips">
+    <button class="chip" onclick="go(0)"><span class="n">1</span>Home shape</button>
+    <button class="chip" onclick="go(1)"><span class="n">2</span>Their third</button>
+    <button class="chip" onclick="go(2)"><span class="n">3</span>Diamond</button>
+    <button class="chip" onclick="go(3)"><span class="n">4</span>Squeeze</button>
+    <button class="chip" onclick="go(4)"><span class="n">5</span>Their kickoff</button>
+    <button class="chip" onclick="go(5)"><span class="n">6</span>Our kickoff</button>
+  </div>
+
+  <div class="board">
+    <svg class="pitch" id="svg" viewBox="0 0 360 660" role="img" aria-label="Editable tactics board">
+      <defs>
+        <marker id="mGold" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#f4b740"/></marker>
+        <marker id="mWhite" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#f4f4f1"/></marker>
+        <marker id="mRed" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e5484d"/></marker>
+      </defs>
+      <rect x="0" y="0" width="360" height="600" rx="10" fill="#0d4a33"/>
+      <g opacity="0.5"><rect x="16" y="16" width="328" height="95" fill="#0f543a"/><rect x="16" y="206" width="328" height="95" fill="#0f543a"/><rect x="16" y="396" width="328" height="95" fill="#0f543a"/></g>
+      <g pointer-events="none">
+        <rect x="82" y="16" width="65" height="568" fill="#f4b740" fill-opacity="0.05"/>
+        <rect x="213" y="16" width="65" height="568" fill="#f4b740" fill-opacity="0.05"/>
+        <g stroke="#eaf2ee" stroke-opacity="0.16" stroke-width="1.2" stroke-dasharray="3 7">
+          <line x1="82" y1="16" x2="82" y2="584"/>
+          <line x1="147" y1="16" x2="147" y2="584"/>
+          <line x1="213" y1="16" x2="213" y2="584"/>
+          <line x1="278" y1="16" x2="278" y2="584"/>
+        </g>
+        <g font-family="Oswald" font-size="8" font-weight="600" letter-spacing="0.5" fill="#f4b740" fill-opacity="0.6" text-anchor="middle">
+          <text x="49" y="600">LW</text>
+          <text x="114" y="600">LHS</text>
+          <text x="180" y="600">C</text>
+          <text x="245" y="600">RHS</text>
+          <text x="311" y="600">RW</text>
+        </g>
+      </g>
+      <g fill="none" stroke="#eaf2ee" stroke-opacity="0.5" stroke-width="2">
+        <rect x="16" y="16" width="328" height="568" rx="4"/>
+        <line x1="16" y1="300" x2="344" y2="300"/>
+        <circle cx="180" cy="300" r="40"/>
+        <rect x="96" y="16" width="168" height="74"/><rect x="126" y="16" width="108" height="26"/>
+        <rect x="96" y="510" width="168" height="74"/><rect x="126" y="558" width="108" height="26"/>
+      </g>
+      <rect x="150" y="11" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
+      <rect x="150" y="584" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
+      <line x1="16" y1="395" x2="344" y2="395" stroke="#f4b740" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="8 7"/>
+      <text x="24" y="389" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">RETREAT LINE</text>
+      <text x="180" y="34" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">THEIR GOAL</text>
+      <text x="180" y="576" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">OUR GOAL</text>
+      <rect x="16" y="606" width="328" height="48" rx="8" fill="#15171c" stroke="#2a2d35"/>
+      <text x="22" y="620" font-family="Oswald" font-size="8" letter-spacing=".12em" fill="#6c6f77">PHOENIX BENCH · DRAG ON AS MANY AS YOU NEED</text>
+
+      <g id="arrLayer"></g>
+
+      <g>
+        <g id="e_o1" class="ox drg" data-kind="node" data-id="o1" transform="translate(40,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o2" class="ox drg" data-kind="node" data-id="o2" transform="translate(76,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o3" class="ox drg" data-kind="node" data-id="o3" transform="translate(112,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o4" class="ox drg" data-kind="node" data-id="o4" transform="translate(148,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o5" class="ox drg" data-kind="node" data-id="o5" transform="translate(184,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o6" class="ox drg" data-kind="node" data-id="o6" transform="translate(220,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o7" class="ox drg" data-kind="node" data-id="o7" transform="translate(256,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o8" class="ox drg" data-kind="node" data-id="o8" transform="translate(292,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+        <g id="e_o9" class="ox drg" data-kind="node" data-id="o9" transform="translate(328,636)"><circle r="20" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#e5484d" stroke="#3a1011" stroke-width="1.5"/></g>
+      </g>
+
+      <g font-family="Oswald" font-weight="700" font-size="10" fill="#15171c" text-anchor="middle">
+        <g id="e_st" class="pl drg" data-kind="node" data-id="st" transform="translate(180,225)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">ST</text></g>
+        <g id="e_cam" class="pl drg" data-kind="node" data-id="cam" transform="translate(180,312)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CAM</text></g>
+        <g id="e_lm" class="pl drg" data-kind="node" data-id="lm" transform="translate(46,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">LM</text></g>
+        <g id="e_rm" class="pl drg" data-kind="node" data-id="rm" transform="translate(314,350)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">RM</text></g>
+        <g id="e_dm" class="pl drg" data-kind="node" data-id="dm" transform="translate(180,395)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CDM</text></g>
+        <g id="e_lb" class="pl drg" data-kind="node" data-id="lb" transform="translate(108,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">LB</text></g>
+        <g id="e_cb" class="pl drg" data-kind="node" data-id="cb" transform="translate(180,485)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">CB</text></g>
+        <g id="e_rb" class="pl drg" data-kind="node" data-id="rb" transform="translate(252,470)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="15" fill="#f4f4f1" stroke="#0c0d10" stroke-width="1.5"/><text y="3.5">RB</text></g>
+        <g id="e_gk" class="pl drg" data-kind="node" data-id="gk" transform="translate(180,548)"><circle r="22" fill="#000" fill-opacity="0.01"/><circle r="14" fill="#5a6472" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/><text y="3.5" fill="#ffffff">GK</text></g>
+        <g id="e_ball" class="pl drg" data-kind="node" data-id="ball" transform="translate(180,377)"><circle r="18" fill="#000" fill-opacity="0.01"/><circle r="6.5" fill="#ffffff" stroke="#0c0d10" stroke-width="1.5"/></g>
+      </g>
+    </svg>
+
+    <div class="capbox">
+      <h3 id="cue">Our home shape</h3>
+      <p id="subtxt">The wide 3-4-1. Strong middle, wide wings.</p>
+      <p class="hint">Drag dots and arrows to fix them. Tap an arrow to select it, then Delete. Each moment keeps your changes.</p>
+
+      <div class="tools">
+        <span class="tlab">Group</span>
+        <button class="tbtn" id="diaBtn" onclick="startShape('diamond')"><span class="sw" style="background:#f4b740"></span>Diamond</button>
+        <button class="tbtn" id="triBtn" onclick="startShape('triangle')"><span class="sw" style="background:#60a5fa"></span>Triangle</button>
+        <button class="tbtn" id="clrShapeBtn" onclick="clearShapes()">Clear shapes</button>
+        <button class="tbtn" id="cancelBtn" onclick="cancelShape()" style="display:none">Cancel</button>
+      </div>
+      <div class="tools">
+        <span class="tlab">Add arrow</span>
+        <button class="tbtn" onclick="addArrow('pass')"><span class="sw" style="background:#f4b740"></span>Pass</button>
+        <button class="tbtn" onclick="addArrow('run')"><span class="sw" style="background:#f4f4f1"></span>Run</button>
+        <button class="tbtn" onclick="addArrow('oppass')"><span class="sw" style="background:#e5484d"></span>Their pass</button>
+        <button class="tbtn" onclick="addArrow('lane')"><span class="swr" style="background:#e5484d"></span>Lane</button>
+        <button class="tbtn del" id="delbtn" onclick="delArrow()" disabled>Delete arrow</button>
+      </div>
+
+      <div class="btnrow">
+        <button class="obtn ghost" onclick="resetScene()">Reset this moment</button>
+        <button class="obtn fill" onclick="copyAll()">Copy positions</button>
+        <span class="status" id="status"></span>
+      </div>
+      <textarea id="exp" readonly></textarea>
+    </div>
+    <div class="keyrow">
+      <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#f4f4f1" stroke="#0c0d10"/></svg>Us</span>
+      <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#e5484d" stroke="#3a1011"/></svg>Phoenix</span>
+      <span><svg width="16" height="16"><circle cx="8" cy="8" r="5" fill="#fff" stroke="#0c0d10"/></svg>Ball</span>
+      <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4b740" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4b740"/></svg>Our pass</span>
+      <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#e5484d" stroke-width="3"/><path d="M20,2 L25,5 L20,8 Z" fill="#e5484d"/></svg>Their pass</span>
+      <span><svg width="26" height="10"><line x1="1" y1="5" x2="20" y2="5" stroke="#f4f4f1" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M20,2 L25,5 L20,8 Z" fill="#f4f4f1"/></svg>Run / press</span>
+      <span><svg width="16" height="16"><polygon points="8,2 14,8 8,14 2,8" fill="none" stroke="#f4b740" stroke-width="1.6"/></svg>Diamond</span>
+      <span><svg width="16" height="16"><polygon points="8,3 14,13 2,13" fill="none" stroke="#60a5fa" stroke-width="1.6"/></svg>Triangle</span>
+    </div>
+  </div>
+
+  <div class="foot">JUVENTUS FC U10 · BEFORE PHOENIX FC · JUNE 12, 2026 · DRAG DOTS AND ARROWS</div>
+</div>
+<script>
+var SVGNS="http://www.w3.org/2000/svg";
+var IDS=["st","cam","lm","rm","dm","lb","cb","rb","gk","ball","o1","o2","o3","o4","o5","o6","o7","o8","o9"];
+var NAMES={st:"ST",cam:"CAM",lm:"LM",rm:"RM",dm:"CDM",lb:"LB",cb:"CB",rb:"RB",gk:"GK",ball:"Ball",o1:"X1",o2:"X2",o3:"X3",o4:"X4",o5:"X5",o6:"X6",o7:"X7",o8:"X8",o9:"X9"};
+var SKEY="juve-phoenix-board-v2";
+// Browser fallback: the host injects window.storage; when missing (plain browser), use localStorage with the same Promise-based get/set interface so saving still works.
+if(!window.storage){
+  try{
+    window.storage={
+      get:function(k){return Promise.resolve({value:localStorage.getItem(k)});},
+      set:function(k,v){localStorage.setItem(k,v);return Promise.resolve(true);}
+    };
+  }catch(e){}
+}
+var DEF=[
+ {cue:"Our home shape",
+  sub:"The wide 3-4-1. Strong middle, wide wings. Every moment starts from here.",
+  pos:{st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,377],o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[220,636],o7:[256,636],o8:[292,636],o9:[328,636]},
+  arr:[]},
+ {cue:"Ball in their third? Everybody up!",
+  sub:"Keeper comes out all the way to the retreat line and sweeps behind us. LB, CB and RB step up to the halfway line, even if players are in behind. If it gets through, track back, tackle safely, and kick it out. No hands outside our box.",
+  pos:{st:[222,92],cam:[198,165],lm:[46,140],rm:[314,140],dm:[180,255],lb:[108,312],cb:[180,324],rb:[252,312],gk:[180,410],ball:[252,98],o1:[274,104],o2:[140,128],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
+  arr:[]},
+ {cue:"Hold the diamond.",
+  sub:"CDM at the base, CAM at the tip, LM and RM between them in the wider lanes. The striker stays highest of all, shading the side the ball is on. Use this everywhere we build, including kick-ins.",
+  pos:{st:[235,240],cam:[180,290],lm:[70,345],rm:[290,345],dm:[180,400],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[254,452],o1:[218,330],o2:[40,636],o3:[76,636],o4:[112,636],o5:[148,636],o6:[184,636],o7:[220,636],o8:[256,636],o9:[292,636]},
+  arr:[]},
+ {cue:"Squeeze! Block every lane.",
+  sub:"The closest man presses the ball right away. Everyone else sprints in tight, sits in the passing lanes, and stays goal side. Leave them nowhere to pass. Same job on their kick-ins.",
+  pos:{st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[281,337],o1:[292,330],o2:[222,252],o3:[148,302],o4:[238,392],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
+  arr:[{k:"lane",f:"o1",t:"o2"},{k:"lane",f:"o1",t:"o3"},{k:"lane",f:"o1",t:"o4"},{k:"press",f:"rm",t:"ball"}]},
+ {cue:"Their kickoff: line of five.",
+  sub:"Mids and striker make a flat line, one man per lane. LB and RB step up to midfield height in their home lanes. Keeper holds the retreat line. The second the ball moves, the closest man in that lane presses and the rest sprint over to support.",
+  pos:{lm:[46,345],dm:[113,345],st:[180,348],cam:[247,345],rm:[314,345],lb:[108,380],cb:[180,386],rb:[252,380],gk:[180,420],ball:[138,244],o1:[167,289],o2:[196,289],o3:[128,232],o4:[262,224],o5:[40,636],o6:[76,636],o7:[112,636],o8:[148,636],o9:[184,636]},
+  arr:[{k:"oppass",f:[180,300],t:"ball"},{k:"press",f:"dm",t:"ball"},{k:"nudge",f:"lm"},{k:"nudge",f:"st"}]},
+ {cue:"Our kickoff: first pass to the CDM.",
+  sub:"The striker taps it and plays it straight back to the CDM, every time. If you are not sure who the CDM is, just ask. CAM and CDM swap half-lanes on every new kickoff to keep Phoenix guessing. Once the CDM has it, we go straight into our diamond.",
+  pos:{st:[166,318],lm:[46,400],dm:[113,400],cam:[247,400],rm:[314,400],lb:[108,478],cb:[180,492],rb:[252,478],gk:[180,548],ball:[180,301],o1:[168,282],o2:[214,272],o3:[40,636],o4:[76,636],o5:[112,636],o6:[148,636],o7:[184,636],o8:[220,636],o9:[256,636]},
+  arr:[{k:"pass",f:"ball",t:"dm"}]}
+];
+var POS=[], ARR=[], SHAPES=[], cur=0, sel=-1;
+var DEFSHAPES=[[],[],[{type:"diamond",ids:["dm","lm","cam","rm"]}],[],[],[]];
+var buildType=null, buildSel=[];
+var SHCOL={diamond:"#f4b740",triangle:"#60a5fa"};
+var canStore=!!(window.storage&&window.storage.set);
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function r(n){return Math.round(n);}
+function el(id){return document.getElementById(id);}
+function setStatus(t){el("status").textContent=t;}
+function findPoly(scene){var A=DEF[scene].arr;for(var i=0;i<A.length;i++){if(A[i].k==="poly")return A[i];}return null;}
+function vp(scene,ref){return (typeof ref==="string")?DEF[scene].pos[ref].slice():ref.slice();}
+function unit(a,b){var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.sqrt(dx*dx+dy*dy)||1;return [dx/L,dy/L,L];}
+function buildArrows(scene){
+  var out=[],specs=DEF[scene].arr,i,s;
+  for(i=0;i<specs.length;i++){
+    s=specs[i];
+    if(s.k==="poly"){continue;}
+    if(s.k==="nudge"){
+      var p0=vp(scene,s.f), b=vp(scene,"ball"), u=unit(p0,b);
+      if(u[2]>40){out.push({t:"run",x1:r(p0[0]+u[0]*18),y1:r(p0[1]+u[1]*18),x2:r(p0[0]+u[0]*46),y2:r(p0[1]+u[1]*46)});}
+      continue;
+    }
+    var f=vp(scene,s.f), t=vp(scene,s.t), uu=unit(f,t), sF,sT,ty;
+    if(s.k==="pass"){sF=9;sT=18;ty="pass";}
+    else if(s.k==="press"){sF=18;sT=11;ty="run";}
+    else if(s.k==="oppass"){sF=4;sT=11;ty="oppass";}
+    else if(s.k==="lane"){sF=14;sT=14;ty="lane";}
+    else{sF=10;sT=14;ty="run";}
+    out.push({t:ty,x1:r(f[0]+uu[0]*sF),y1:r(f[1]+uu[1]*sF),x2:r(t[0]-uu[0]*sT),y2:r(t[1]-uu[1]*sT)});
+  }
+  return out;
+}
+function mkEl(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs){e.setAttribute(k,attrs[k]);}return e;}
+function styleArrow(ln,t){
+  ln.setAttribute("fill","none");
+  if(t==="pass"){ln.setAttribute("stroke","#f4b740");ln.setAttribute("stroke-width","3");ln.setAttribute("marker-end","url(#mGold)");}
+  else if(t==="run"){ln.setAttribute("stroke","#f4f4f1");ln.setAttribute("stroke-width","2.5");ln.setAttribute("stroke-dasharray","6 5");ln.setAttribute("marker-end","url(#mWhite)");}
+  else if(t==="oppass"){ln.setAttribute("stroke","#e5484d");ln.setAttribute("stroke-width","3");ln.setAttribute("marker-end","url(#mRed)");}
+  else if(t==="lane"){ln.setAttribute("stroke","#e5484d");ln.setAttribute("stroke-opacity","0.6");ln.setAttribute("stroke-width","2");ln.setAttribute("stroke-dasharray","4 4");}
+}
+function placeNodes(){
+  var p=POS[cur],i;
+  for(i=0;i<IDS.length;i++){el("e_"+IDS[i]).style.transform="translate("+p[IDS[i]][0]+"px,"+p[IDS[i]][1]+"px)";}
+}
+function shapePts(ids){
+  var P=[],i;for(i=0;i<ids.length;i++){var q=POS[cur][ids[i]];if(q){P.push([q[0],q[1]]);}}
+  if(P.length<3){return null;}
+  var cxv=0,cyv=0;for(i=0;i<P.length;i++){cxv+=P[i][0];cyv+=P[i][1];}cxv/=P.length;cyv/=P.length;
+  P.sort(function(a,b){return Math.atan2(a[1]-cyv,a[0]-cxv)-Math.atan2(b[1]-cyv,b[0]-cxv);});
+  var s="";for(i=0;i<P.length;i++){s+=P[i][0]+","+P[i][1]+" ";}
+  return s;
+}
+function renderArrows(){
+  var L=el("arrLayer");while(L.firstChild){L.removeChild(L.firstChild);}
+  var i,a;
+  var SH=SHAPES[cur];
+  for(i=0;i<SH.length;i++){
+    var spts=shapePts(SH[i].ids);if(!spts){continue;}
+    var scol=SHCOL[SH[i].type]||"#f4b740";
+    L.appendChild(mkEl("polygon",{points:spts,fill:scol,"fill-opacity":"0.07",stroke:scol,"stroke-opacity":"0.65","stroke-width":"2","stroke-dasharray":"6 5","stroke-linejoin":"round"}));
+  }
+  var A=ARR[cur];
+  if(sel>=0&&A[sel]){a=A[sel];L.appendChild(mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2,stroke:"#f4b740","stroke-opacity":"0.28","stroke-width":"9","stroke-linecap":"round"}));}
+  for(i=0;i<A.length;i++){a=A[i];var ln=mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2});styleArrow(ln,a.t);L.appendChild(ln);}
+  for(i=0;i<A.length;i++){a=A[i];var hb=mkEl("line",{x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2,stroke:"#000","stroke-opacity":"0.001","stroke-width":"18","stroke-linecap":"round"});hb.setAttribute("class","drg");hb.dataset.kind="ab";hb.dataset.i=i;L.appendChild(hb);}
+  for(i=0;i<A.length;i++){a=A[i];
+    var ends=[[a.x1,a.y1,"1"],[a.x2,a.y2,"2"]];
+    for(var e=0;e<2;e++){
+      var h=ends[e],big=(i===sel);
+      var hit=mkEl("circle",{cx:h[0],cy:h[1],r:"15",fill:"#000","fill-opacity":"0.001"});hit.setAttribute("class","drg");hit.dataset.kind="ah";hit.dataset.i=i;hit.dataset.end=h[2];L.appendChild(hit);
+      L.appendChild(mkEl("circle",{cx:h[0],cy:h[1],r:big?"7":"5",fill:big?"#f4b740":"#0f1116",stroke:"#f4b740","stroke-width":"2","pointer-events":"none"}));
+    }
+  }
+  if(buildType){
+    var bc=SHCOL[buildType];
+    for(i=0;i<buildSel.length;i++){var bq=POS[cur][buildSel[i]];if(bq){L.appendChild(mkEl("circle",{cx:bq[0],cy:bq[1],r:"21",fill:"none",stroke:bc,"stroke-width":"3","stroke-opacity":"0.95","pointer-events":"none"}));}}
+  }
+}
+function render(){
+  placeNodes();renderArrows();
+  el("cue").textContent=DEF[cur].cue;
+  el("subtxt").textContent=DEF[cur].sub;
+  el("delbtn").disabled=(sel<0);
+  el("cancelBtn").style.display=buildType?"inline-flex":"none";
+  el("diaBtn").classList.toggle("act",buildType==="diamond");
+  el("triBtn").classList.toggle("act",buildType==="triangle");
+  var chips=el("chips").getElementsByTagName("button"),c;
+  for(c=0;c<chips.length;c++){chips[c].className=(c===cur)?"chip on":"chip";}
+}
+function go(i){cur=i;sel=-1;buildType=null;buildSel=[];el("exp").style.display="none";render();}
+function addArrow(t){
+  ARR[cur].push({t:t,x1:150,y1:344,x2:200,y2:280});
+  sel=ARR[cur].length-1;render();save();
+  setStatus("Arrow added. Drag its ends to place it.");
+}
+function delArrow(){if(sel<0){return;}ARR[cur].splice(sel,1);sel=-1;render();save();setStatus("Arrow deleted.");}
+function startShape(t){buildType=t;buildSel=[];sel=-1;render();setStatus("Tap "+(t==="triangle"?3:4)+" players for the "+t+", or tap Cancel.");}
+function cancelShape(){buildType=null;buildSel=[];render();setStatus("Cancelled.");}
+function clearShapes(){SHAPES[cur]=[];buildType=null;buildSel=[];render();save();setStatus("Shapes cleared. Pick a new group if you like.");}
+function resetScene(){POS[cur]=clone(DEF[cur].pos);ARR[cur]=buildArrows(cur);SHAPES[cur]=clone(DEFSHAPES[cur]);sel=-1;buildType=null;buildSel=[];render();save();setStatus("Moment reset.");}
+function save(){
+  if(!canStore){setStatus("Saving is off here. Use Copy positions.");return;}
+  try{
+    window.storage.set(SKEY,JSON.stringify({v:2,pos:POS,arr:ARR,shapes:SHAPES})).then(function(rr){
+      setStatus(rr?"Saved.":"Save failed. Use Copy positions.");
+    }).catch(function(){setStatus("Save failed. Use Copy positions.");});
+  }catch(e){setStatus("Save failed. Use Copy positions.");}
+}
+function initData(){
+  POS=[];ARR=[];SHAPES=[];
+  for(var i=0;i<DEF.length;i++){POS.push(clone(DEF[i].pos));ARR.push(buildArrows(i));SHAPES.push(clone(DEFSHAPES[i]));}
+}
+function loadSaved(){
+  initData();
+  if(!canStore){render();return;}
+  try{
+    window.storage.get(SKEY).then(function(rr){
+      try{
+        var d=JSON.parse(rr.value);
+        if(d&&d.pos&&d.pos.length===DEF.length&&d.arr&&d.arr.length===DEF.length){
+          POS=d.pos;ARR=d.arr;
+          if(d.shapes&&d.shapes.length===DEF.length){SHAPES=d.shapes;}
+          for(var s=0;s<DEF.length;s++){for(var key in DEF[s].pos){if(!POS[s][key]){POS[s][key]=DEF[s].pos[key].slice();}}}
+          setStatus("Loaded your saved fixes.");
+        }
+      }catch(e){}
+      render();
+    }).catch(function(){render();});
+  }catch(e){render();}
+}
+function copyAll(){
+  var out={},i,k,j;
+  for(i=0;i<DEF.length;i++){
+    var sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
+    for(k in POS[i]){
+      var rp=[r(POS[i][k][0]),r(POS[i][k][1])];
+      if(k==="ball"){sc.ball=rp;}
+      else if(k.charAt(0)==="o"){if(POS[i][k][1]<600){sc.opponents[NAMES[k]]=rp;}}
+      else{sc.players[NAMES[k]]=rp;}
+    }
+    for(j=0;j<ARR[i].length;j++){var a=ARR[i][j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
+    for(j=0;j<SHAPES[i].length;j++){var shh=SHAPES[i][j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
+    out[(i+1)+" "+DEF[i].cue]=sc;
+  }
+  var txt="Fixed Phoenix board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
+  var ta=el("exp");
+  function fb(){ta.style.display="block";ta.value=txt;ta.focus();ta.select();setStatus("Copy the text below and paste it to me.");}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){setStatus("Copied. Paste it to me in the chat.");}).catch(fb);
+  }else{fb();}
+}
+(function(){
+  var svg=el("svg"),mode=null,nid=null,ai=null,aend=null,abS=null,grab=null;
+  function svgXY(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;var m=svg.getScreenCTM();if(!m){return[0,0];}var q=p.matrixTransform(m.inverse());return[q.x,q.y];}
+  function hit(node){while(node&&node!==svg){if(node.dataset&&node.dataset.kind){return node;}node=node.parentNode;}return null;}
+  function cx(x){return x<16?16:(x>344?344:x);}
+  svg.addEventListener("pointerdown",function(e){
+    var g=hit(e.target);
+    if(buildType){
+      e.preventDefault();
+      if(g&&g.dataset.kind==="node"){
+        var pid=g.dataset.id;
+        if(pid!=="ball"&&pid.charAt(0)!=="o"&&buildSel.indexOf(pid)===-1){
+          buildSel.push(pid);
+          var need=(buildType==="triangle")?3:4;
+          if(buildSel.length>=need){
+            SHAPES[cur].push({type:buildType,ids:buildSel.slice()});
+            var made=buildType;buildType=null;buildSel=[];render();save();
+            setStatus((made==="triangle"?"Triangle":"Diamond")+" added. It follows the players when you drag them.");
+          }else{
+            render();setStatus("Tap "+(need-buildSel.length)+" more for the "+buildType+".");
+          }
+        }
+      }
+      return;
+    }
+    if(!g){if(sel>=0){sel=-1;render();}return;}
+    e.preventDefault();
+    var k=g.dataset.kind;
+    if(k==="node"){
+      mode="node";nid=g.dataset.id;var m=svgXY(e),p=POS[cur][nid];grab=[m[0]-p[0],m[1]-p[1]];el("e_"+nid).style.transition="none";
+    }else if(k==="ah"){
+      mode="ah";ai=+g.dataset.i;aend=g.dataset.end;sel=ai;render();el("delbtn").disabled=false;
+    }else if(k==="ab"){
+      mode="ab";ai=+g.dataset.i;sel=ai;var mm=svgXY(e),aa=ARR[cur][ai];abS={mx:mm[0],my:mm[1],x1:aa.x1,y1:aa.y1,x2:aa.x2,y2:aa.y2};render();el("delbtn").disabled=false;
+    }
+    if(svg.setPointerCapture){try{svg.setPointerCapture(e.pointerId);}catch(err){}}
+  });
+  svg.addEventListener("pointermove",function(e){
+    if(!mode){return;}
+    e.preventDefault();
+    var m=svgXY(e);
+    if(mode==="node"){
+      var isO=(nid.charAt(0)==="o"),x=cx(r(m[0]-grab[0])),y=r(m[1]-grab[1]);
+      if(y<20){y=20;}var ymax=isO?650:580;if(y>ymax){y=ymax;}
+      POS[cur][nid]=[x,y];el("e_"+nid).style.transform="translate("+x+"px,"+y+"px)";
+      renderArrows();
+    }else if(mode==="ah"){
+      var a=ARR[cur][ai],x=cx(r(m[0])),y=r(m[1]);if(y<18){y=18;}if(y>598){y=598;}
+      if(aend==="1"){a.x1=x;a.y1=y;}else{a.x2=x;a.y2=y;}
+      renderArrows();
+    }else if(mode==="ab"){
+      var b=ARR[cur][ai],dx=r(m[0]-abS.mx),dy=r(m[1]-abS.my);
+      b.x1=abS.x1+dx;b.y1=abS.y1+dy;b.x2=abS.x2+dx;b.y2=abS.y2+dy;
+      renderArrows();
+    }
+  });
+  function endDrag(){
+    if(!mode){return;}
+    if(mode==="node"){el("e_"+nid).style.transition="";}
+    mode=null;save();
+  }
+  svg.addEventListener("pointerup",endDrag);
+  svg.addEventListener("pointercancel",endDrag);
+})();
+loadSaved();
+</script>
+</body>
+</html>
