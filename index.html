@@ -170,7 +170,9 @@
         <span class="tlab">Shape</span>
         <button class="tbtn" id="diaBtn" onclick="startShape('diamond')"><span class="sw" style="background:#f4b740"></span>Diamond</button>
         <button class="tbtn" id="triBtn" onclick="startShape('triangle')"><span class="sw" style="background:#60a5fa"></span>Triangle</button>
+        <button class="tbtn" id="connBtn" onclick="startShape('chain')"><span class="sw" style="background:#34d399"></span>Connect</button>
         <button class="tbtn" id="clrShapeBtn" onclick="clearShapes()">Clear shapes</button>
+        <button class="tbtn" id="doneBtn" onclick="finishShape()" style="display:none">Done</button>
         <button class="tbtn" id="cancelBtn" onclick="cancelShape()" style="display:none">Cancel</button>
       </div>
       <div class="tools">
@@ -200,6 +202,7 @@
       <span><svg width="26" height="10"><circle cx="3" cy="5" r="2" fill="#e5484d"/><line x1="5" y1="5" x2="21" y2="5" stroke="#e5484d" stroke-width="2" stroke-dasharray="3 3"/><circle cx="23" cy="5" r="2" fill="#e5484d"/></svg>Passing lane</span>
       <span><svg width="16" height="16"><polygon points="8,2 14,8 8,14 2,8" fill="none" stroke="#f4b740" stroke-width="1.6"/></svg>Diamond</span>
       <span><svg width="16" height="16"><polygon points="8,3 14,13 2,13" fill="none" stroke="#60a5fa" stroke-width="1.6"/></svg>Triangle</span>
+      <span><svg width="16" height="16"><polyline points="2,12 8,4 14,11" fill="none" stroke="#34d399" stroke-width="1.6" stroke-dasharray="2 2"/></svg>Connect</span>
     </div>
   </div>
 
@@ -254,7 +257,7 @@ var SCN=[
   phases:[{pos:P({st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,300]}),arr:[],shapes:[]}]}
 ];
 var STATE=[], cur=0, sel=-1, buildType=null, buildSel=[];
-var SHCOL={diamond:"#f4b740",triangle:"#60a5fa"};
+var SHCOL={diamond:"#f4b740",triangle:"#60a5fa",chain:"#34d399"};
 var canStore=!!(window.storage&&window.storage.set);
 function clone(o){return JSON.parse(JSON.stringify(o));}
 function r(n){return Math.round(n);}
@@ -284,13 +287,23 @@ function shapePts(ids){
   var s="";for(i=0;i<P2.length;i++){s+=P2[i][0]+","+P2[i][1]+" ";}
   return s;
 }
+function chainPts(ids){
+  var pos=CS().pos,s="",c=0,i;
+  for(i=0;i<ids.length;i++){var q=pos[ids[i]];if(q){s+=q[0]+","+q[1]+" ";c++;}}
+  return c>=2?s:null;
+}
 function renderArrows(){
   var L=el("arrLayer");while(L.firstChild){L.removeChild(L.firstChild);}
   var i,a,cs=CS();
   var SH=cs.shapes;
   for(i=0;i<SH.length;i++){
-    var spts=shapePts(SH[i].ids);if(!spts){continue;}
     var scol=SHCOL[SH[i].type]||"#f4b740";
+    if(SH[i].type==="chain"){
+      var cpts=chainPts(SH[i].ids);if(!cpts){continue;}
+      L.appendChild(mkEl("polyline",{points:cpts,fill:"none",stroke:scol,"stroke-opacity":"0.85","stroke-width":"2.5","stroke-dasharray":"2 5","stroke-linecap":"round","stroke-linejoin":"round"}));
+      continue;
+    }
+    var spts=shapePts(SH[i].ids);if(!spts){continue;}
     L.appendChild(mkEl("polygon",{points:spts,fill:scol,"fill-opacity":"0.07",stroke:scol,"stroke-opacity":"0.65","stroke-width":"2","stroke-dasharray":"6 5","stroke-linejoin":"round"}));
   }
   var A=cs.arr;
@@ -309,6 +322,10 @@ function renderArrows(){
   }
   if(buildType){
     var bc=SHCOL[buildType];
+    if(buildType==="chain"&&buildSel.length>=2){
+      var pp="";for(i=0;i<buildSel.length;i++){var bq2=cs.pos[buildSel[i]];if(bq2){pp+=bq2[0]+","+bq2[1]+" ";}}
+      L.appendChild(mkEl("polyline",{points:pp,fill:"none",stroke:bc,"stroke-width":"2.5","stroke-dasharray":"2 5","stroke-opacity":"0.9","pointer-events":"none"}));
+    }
     for(i=0;i<buildSel.length;i++){var bq=cs.pos[buildSel[i]];if(bq){L.appendChild(mkEl("circle",{cx:bq[0],cy:bq[1],r:"21",fill:"none",stroke:bc,"stroke-width":"3","stroke-opacity":"0.95","pointer-events":"none"}));}}
   }
 }
@@ -318,8 +335,10 @@ function render(){
   el("subtxt").textContent=SCN[cur].sub;
   el("delbtn").disabled=(sel<0);
   el("cancelBtn").style.display=buildType?"inline-flex":"none";
+  el("doneBtn").style.display=(buildType==="chain")?"inline-flex":"none";
   el("diaBtn").classList.toggle("act",buildType==="diamond");
   el("triBtn").classList.toggle("act",buildType==="triangle");
+  el("connBtn").classList.toggle("act",buildType==="chain");
   var multi=SCN[cur].phases.length>1;
   el("phaserow").style.display=multi?"flex":"none";
   if(multi){el("beforeBtn").className="pbtn"+(STATE[cur].i===0?" on":"");el("afterBtn").className="pbtn"+(STATE[cur].i===1?" on":"");}
@@ -335,7 +354,16 @@ function addArrow(t){
 }
 function delArrow(){if(sel<0){return;}CS().arr.splice(sel,1);sel=-1;render();save();setStatus("Arrow deleted.");}
 function clearArrows(){CS().arr=[];sel=-1;render();save();setStatus("Arrows cleared.");}
-function startShape(t){buildType=t;buildSel=[];sel=-1;render();setStatus("Tap "+(t==="triangle"?3:4)+" players for the "+t+", or tap Cancel.");}
+function startShape(t){buildType=t;buildSel=[];sel=-1;render();
+  if(t==="chain"){setStatus("Tap players in order to connect them, then tap Done.");}
+  else{setStatus("Tap "+(t==="triangle"?3:4)+" players for the "+t+", or tap Cancel.");}
+}
+function finishShape(){
+  if(buildType!=="chain"){return;}
+  if(buildSel.length<2){setStatus("Tap at least two players first.");return;}
+  CS().shapes.push({type:"chain",ids:buildSel.slice()});
+  buildType=null;buildSel=[];render();save();setStatus("Connected line added. It follows the players.");
+}
 function cancelShape(){buildType=null;buildSel=[];render();setStatus("Cancelled.");}
 function clearShapes(){CS().shapes=[];buildType=null;buildSel=[];render();save();setStatus("Shapes cleared.");}
 function resetScene(){
@@ -449,13 +477,17 @@ function saveImage(){
         var pid=g.dataset.id;
         if(pid!=="ball"&&pid.charAt(0)!=="o"&&buildSel.indexOf(pid)===-1){
           buildSel.push(pid);
-          var need=(buildType==="triangle")?3:4;
-          if(buildSel.length>=need){
-            CS().shapes.push({type:buildType,ids:buildSel.slice()});
-            var made=buildType;buildType=null;buildSel=[];render();save();
-            setStatus((made==="triangle"?"Triangle":"Diamond")+" added. It follows the players when you drag them.");
+          if(buildType==="chain"){
+            render();setStatus("Connected "+buildSel.length+". Tap more players, then tap Done.");
           }else{
-            render();setStatus("Tap "+(need-buildSel.length)+" more for the "+buildType+".");
+            var need=(buildType==="triangle")?3:4;
+            if(buildSel.length>=need){
+              CS().shapes.push({type:buildType,ids:buildSel.slice()});
+              var made=buildType;buildType=null;buildSel=[];render();save();
+              setStatus((made==="triangle"?"Triangle":"Diamond")+" added. It follows the players when you drag them.");
+            }else{
+              render();setStatus("Tap "+(need-buildSel.length)+" more for the "+buildType+".");
+            }
           }
         }
       }
