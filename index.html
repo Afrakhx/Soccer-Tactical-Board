@@ -130,7 +130,11 @@
       <rect x="150" y="11" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
       <rect x="150" y="584" width="60" height="6" fill="#eaf2ee" fill-opacity="0.5"/>
       <line x1="16" y1="442" x2="344" y2="442" stroke="#f4b740" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="8 7"/>
-      <text x="24" y="436" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">RETREAT LINE</text>
+      <text x="24" y="436" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">OUR RETREAT LINE</text>
+      <g id="theirRetreat" style="display:none">
+        <line x1="16" y1="158" x2="344" y2="158" stroke="#f4b740" stroke-opacity="0.45" stroke-width="2" stroke-dasharray="8 7"/>
+        <text x="24" y="152" font-family="Oswald" font-size="8.5" letter-spacing=".12em" fill="#f4b740" fill-opacity="0.55">THEIR RETREAT LINE</text>
+      </g>
       <text x="180" y="34" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">THEIR GOAL</text>
       <text x="180" y="576" text-anchor="middle" font-family="Oswald" font-size="9" letter-spacing=".15em" fill="#cfe3d8" fill-opacity="0.45">OUR GOAL</text>
       <rect x="16" y="606" width="328" height="48" rx="8" fill="#15171c" stroke="#2a2d35"/>
@@ -190,6 +194,7 @@
       <div class="btnrow">
         <button class="obtn ghost" onclick="resetScene()">Reset this moment</button>
         <button class="obtn fill" onclick="saveImage()">Save image</button>
+        <button class="obtn ghost" onclick="copyCode()">Copy code</button>
         <span class="status" id="status"></span>
       </div>
     </div>
@@ -237,7 +242,7 @@ var SCN=[
   phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
 
  {name:"High Press",cue:"High press: win it back high!",
-  sub:"This is when the other team has the ball near their own goal and is trying to play out. We do NOT sit back. The closest player sprints at the ball right away, and the players near him stand in front of the easy passes so the other team can't escape. Win it this high and we are one pass from a goal. Be brave and push up together. If they boot it long over us, the keeper sweeps and we drop and reset.",
+  sub:"This is when the other team has the ball near their own goal and is trying to play out. We do NOT sit back. On their goal kick, wait behind their retreat line until they touch the ball, then sprint. The closest player goes straight at the ball, and the players near him stand in front of the easy passes so the other team can't escape. Win it this high and we are one pass from a goal. Be brave and push up together. If they boot it long over us, the keeper sweeps and we drop and reset.",
   phases:[{pos:P({st:[180,120],cam:[180,205],lm:[85,175],rm:[275,175],dm:[180,285],lb:[100,335],cb:[180,355],rb:[260,335],gk:[180,442],ball:[180,85],o1:[180,75],o2:[110,120],o3:[250,120],o4:[180,40]}),arr:[{t:"run",x1:180,y1:104,x2:180,y2:93},{t:"run",x1:98,y1:158,x2:112,y2:130},{t:"run",x1:262,y1:158,x2:246,y2:130}],shapes:[]}]},
 
  {name:"Squeeze",cue:"Squeeze and choke",
@@ -338,6 +343,7 @@ function render(){
   placeNodes();renderArrows();
   el("cue").textContent=SCN[cur].cue;
   el("subtxt").textContent=SCN[cur].sub;
+  el("theirRetreat").style.display=(SCN[cur].name==="High Press")?"":"none";
   el("delbtn").disabled=(sel<0);
   el("cancelBtn").style.display=buildType?"inline-flex":"none";
   el("doneBtn").style.display=(buildType==="chain")?"inline-flex":"none";
@@ -411,6 +417,35 @@ function loadSaved(){
       render();
     }).catch(function(){render();});
   }catch(e){render();}
+}
+// Export every moment as JSON text and copy it to the clipboard (for sending layouts to the coach).
+function copyCode(){
+  var out={},i,j,k,p;
+  for(i=0;i<SCN.length;i++){
+    var multi=SCN[i].phases.length>1;
+    for(p=0;p<STATE[i].ph.length;p++){
+      var ph=STATE[i].ph[p],sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
+      for(k in ph.pos){
+        var rp=[r(ph.pos[k][0]),r(ph.pos[k][1])];
+        if(k==="ball"){sc.ball=rp;}
+        else if(k.charAt(0)==="o"){if(ph.pos[k][1]<600){sc.opponents[NAMES[k]]=rp;}}
+        else{sc.players[NAMES[k]]=rp;}
+      }
+      for(j=0;j<ph.arr.length;j++){var a=ph.arr[j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
+      for(j=0;j<ph.shapes.length;j++){var shh=ph.shapes[j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
+      out[(i+1)+" "+SCN[i].name+(multi?" ("+(p===0?"before":"after")+")":"")]=sc;
+    }
+  }
+  var txt="Juventus U10 board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
+  function fb(){
+    var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.left="-9999px";
+    document.body.appendChild(ta);ta.focus();ta.select();
+    try{document.execCommand("copy");setStatus("Code copied. Paste it in the chat.");}catch(e){window.prompt("Copy this:",txt);}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){setStatus("Code copied. Paste it in the chat.");}).catch(fb);
+  }else{fb();}
 }
 // Save just the field view (pitch + whatever is drawn, no bench) as a PNG.
 // On phones the native share sheet lets the user save it to Photos.
