@@ -80,12 +80,11 @@
   <p class="sub">Tap a moment to see where everyone goes. Some moments have a Before and After — tap those to watch the play happen.</p>
 
   <div class="chips" id="chips">
-    <button class="chip" onclick="go(0)"><span class="n">1</span>Positions</button>
-    <button class="chip" onclick="go(1)"><span class="n">2</span>Push up</button>
-    <button class="chip" onclick="go(2)"><span class="n">3</span>Squeeze</button>
-    <button class="chip" onclick="go(3)"><span class="n">4</span>Their kickoff</button>
-    <button class="chip" onclick="go(4)"><span class="n">5</span>Our kickoff</button>
-    <button class="chip" onclick="go(5)"><span class="n">6</span>Free draw</button>
+    <button class="chip" onclick="go(0)"><span class="n">1</span>Push up</button>
+    <button class="chip" onclick="go(1)"><span class="n">2</span>Squeeze</button>
+    <button class="chip" onclick="go(2)"><span class="n">3</span>Their kickoff</button>
+    <button class="chip" onclick="go(3)"><span class="n">4</span>Our kickoff</button>
+    <button class="chip" onclick="go(4)"><span class="n">5</span>Free draw</button>
   </div>
 
   <div class="board">
@@ -159,7 +158,7 @@
     </svg>
 
     <div class="capbox">
-      <h3 id="cue">Where we all start</h3>
+      <h3 id="cue">Ball near their goal — everyone up!</h3>
       <p id="subtxt"></p>
 
       <div class="phaserow" id="phaserow" style="display:none">
@@ -210,7 +209,7 @@
 var SVGNS="http://www.w3.org/2000/svg";
 var IDS=["st","cam","lm","rm","dm","lb","cb","rb","gk","ball","o1","o2","o3","o4","o5","o6","o7","o8","o9"];
 var NAMES={st:"ST",cam:"CAM",lm:"LM",rm:"RM",dm:"CDM",lb:"LB",cb:"CB",rb:"RB",gk:"GK",ball:"Ball",o1:"X1",o2:"X2",o3:"X3",o4:"X4",o5:"X5",o6:"X6",o7:"X7",o8:"X8",o9:"X9"};
-var SKEY="juve-phoenix-board-v3";
+var SKEY="juve-phoenix-board-v4";
 // Browser fallback: the host injects window.storage; when missing (plain browser), use localStorage with the same Promise-based get/set interface so saving still works.
 if(!window.storage){
   try{
@@ -225,10 +224,6 @@ var BENCH={o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[22
 function P(o){var z={},k;for(k in BENCH){z[k]=BENCH[k].slice();}for(k in o){z[k]=o[k].slice();}return z;}
 // Each moment has one or more phases (Before / After). Arrows are stored as pixel coordinates; shapes reference player ids.
 var SCN=[
- {name:"Positions",cue:"Where we all start",
-  sub:"This is the spot each player calls home — roughly where you stand when nothing big is happening. It's only a starting point, not a cage. When you see space, go fill it: make overlapping runs, swap spots, and cover for a teammate who has gone forward. Just always know your home spot so you can get back to it.",
-  phases:[{pos:P({st:[180,225],cam:[180,312],lm:[46,350],rm:[314,350],dm:[180,395],lb:[108,470],cb:[180,485],rb:[252,470],gk:[180,548],ball:[180,377]}),arr:[],shapes:[]}]},
-
  {name:"Push up",cue:"Ball near their goal — everyone up!",
   sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us — up there it's feet and head only, no hands. The striker makes the diamond: the LM can't cross into the middle, so instead he runs into the goal box to be dangerous. Remember, a diamond can be made by whoever is closest — it doesn't have to be the same players every time.",
   phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
@@ -347,7 +342,7 @@ function resetScene(){
 function save(){
   if(!canStore){setStatus("Saving is off here. Use Copy positions.");return;}
   try{
-    window.storage.set(SKEY,JSON.stringify({v:3,state:STATE})).then(function(rr){
+    window.storage.set(SKEY,JSON.stringify({v:4,state:STATE})).then(function(rr){
       setStatus(rr?"Saved.":"Save failed. Use Copy positions.");
     }).catch(function(){setStatus("Save failed. Use Copy positions.");});
   }catch(e){setStatus("Save failed. Use Copy positions.");}
@@ -367,7 +362,7 @@ function loadSaved(){
   try{
     window.storage.get(SKEY).then(function(rr){
       try{
-        var d=JSON.parse(rr.value),ok=d&&d.v===3&&d.state&&d.state.length===SCN.length;
+        var d=JSON.parse(rr.value),ok=d&&d.v===4&&d.state&&d.state.length===SCN.length;
         if(ok){for(var i=0;i<SCN.length;i++){if(!d.state[i]||!d.state[i].ph||d.state[i].ph.length!==SCN[i].phases.length){ok=false;break;}}}
         if(ok){STATE=d.state;for(var s=0;s<STATE.length;s++){if(typeof STATE[s].i!=="number"){STATE[s].i=0;}}fillMissing();setStatus("Loaded your saved board.");}
       }catch(e){}
