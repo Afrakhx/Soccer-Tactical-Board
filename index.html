@@ -194,7 +194,6 @@
       <div class="btnrow">
         <button class="obtn ghost" onclick="resetScene()">Reset this moment</button>
         <button class="obtn fill" onclick="saveImage()">Save image</button>
-        <button class="obtn ghost" onclick="copyCode()">Copy code</button>
         <span class="status" id="status"></span>
       </div>
     </div>
@@ -417,35 +416,6 @@ function loadSaved(){
       render();
     }).catch(function(){render();});
   }catch(e){render();}
-}
-// Export every moment as JSON text and copy it to the clipboard (for sending layouts to the coach).
-function copyCode(){
-  var out={},i,j,k,p;
-  for(i=0;i<SCN.length;i++){
-    var multi=SCN[i].phases.length>1;
-    for(p=0;p<STATE[i].ph.length;p++){
-      var ph=STATE[i].ph[p],sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
-      for(k in ph.pos){
-        var rp=[r(ph.pos[k][0]),r(ph.pos[k][1])];
-        if(k==="ball"){sc.ball=rp;}
-        else if(k.charAt(0)==="o"){if(ph.pos[k][1]<600){sc.opponents[NAMES[k]]=rp;}}
-        else{sc.players[NAMES[k]]=rp;}
-      }
-      for(j=0;j<ph.arr.length;j++){var a=ph.arr[j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
-      for(j=0;j<ph.shapes.length;j++){var shh=ph.shapes[j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
-      out[(i+1)+" "+SCN[i].name+(multi?" ("+(p===0?"before":"after")+")":"")]=sc;
-    }
-  }
-  var txt="Juventus U10 board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
-  function fb(){
-    var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.left="-9999px";
-    document.body.appendChild(ta);ta.focus();ta.select();
-    try{document.execCommand("copy");setStatus("Code copied. Paste it in the chat.");}catch(e){window.prompt("Copy this:",txt);}
-    document.body.removeChild(ta);
-  }
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(function(){setStatus("Code copied. Paste it in the chat.");}).catch(fb);
-  }else{fb();}
 }
 // Save just the field view (pitch + whatever is drawn, no bench) as a PNG.
 // On phones the native share sheet lets the user save it to Photos.
