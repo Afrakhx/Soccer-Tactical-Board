@@ -45,6 +45,7 @@
   .tbtn .sw{width:14px;height:4px;border-radius:2px;display:inline-block;}
   .tbtn.del{color:#e6b9ba;}
   .tbtn.del:hover{border-color:var(--red);}
+  .tbtn.done{border-color:#34d399;color:#9ff0cd;background:#16271f;}
   .tbtn:disabled{opacity:.38;cursor:default;border-color:var(--line);}
   .tbtn.act{border-color:#ededef;color:#fff;background:#23262e;}
   .btnrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;}
@@ -172,7 +173,7 @@
         <button class="tbtn" id="triBtn" onclick="startShape('triangle')"><span class="sw" style="background:#60a5fa"></span>Triangle</button>
         <button class="tbtn" id="connBtn" onclick="startShape('chain')"><span class="sw" style="background:#34d399"></span>Connect</button>
         <button class="tbtn" id="clrShapeBtn" onclick="clearShapes()">Clear shapes</button>
-        <button class="tbtn" id="doneBtn" onclick="finishShape()" style="display:none">Done</button>
+        <button class="tbtn done" id="doneBtn" onclick="finishShape()" style="display:none">Done, connect</button>
         <button class="tbtn" id="cancelBtn" onclick="cancelShape()" style="display:none">Cancel</button>
       </div>
       <div class="tools">
@@ -345,24 +346,30 @@ function render(){
   var chips=el("chips").getElementsByTagName("button"),c;
   for(c=0;c<chips.length;c++){chips[c].className=(c===cur)?"chip on":"chip";}
 }
-function go(i){cur=i;sel=-1;buildType=null;buildSel=[];render();}
-function setPhase(p){STATE[cur].i=p;sel=-1;buildType=null;buildSel=[];render();}
+// If a Connect line is half-built (2+ players) and the user does something else, keep it instead of losing it.
+function commitChainIfAny(){
+  if(buildType==="chain"&&buildSel.length>=2){CS().shapes.push({type:"chain",ids:buildSel.slice()});save();}
+  buildType=null;buildSel=[];
+}
+function go(i){commitChainIfAny();cur=i;sel=-1;render();}
+function setPhase(p){commitChainIfAny();STATE[cur].i=p;sel=-1;render();}
 function addArrow(t){
+  commitChainIfAny();
   CS().arr.push({t:t,x1:150,y1:344,x2:200,y2:280});
   sel=CS().arr.length-1;render();save();
   setStatus("Arrow added. Drag its ends to place it.");
 }
 function delArrow(){if(sel<0){return;}CS().arr.splice(sel,1);sel=-1;render();save();setStatus("Arrow deleted.");}
 function clearArrows(){CS().arr=[];sel=-1;render();save();setStatus("Arrows cleared.");}
-function startShape(t){buildType=t;buildSel=[];sel=-1;render();
-  if(t==="chain"){setStatus("Tap players in order to connect them, then tap Done.");}
+function startShape(t){commitChainIfAny();buildType=t;buildSel=[];sel=-1;render();
+  if(t==="chain"){setStatus("Tap players in order to connect them. Tap the last player again, or tap Done, to finish.");}
   else{setStatus("Tap "+(t==="triangle"?3:4)+" players for the "+t+", or tap Cancel.");}
 }
 function finishShape(){
   if(buildType!=="chain"){return;}
   if(buildSel.length<2){setStatus("Tap at least two players first.");return;}
   CS().shapes.push({type:"chain",ids:buildSel.slice()});
-  buildType=null;buildSel=[];render();save();setStatus("Connected line added. It follows the players.");
+  buildType=null;buildSel=[];render();save();setStatus("Connection complete. The line follows the players.");
 }
 function cancelShape(){buildType=null;buildSel=[];render();setStatus("Cancelled.");}
 function clearShapes(){CS().shapes=[];buildType=null;buildSel=[];render();save();setStatus("Shapes cleared.");}
@@ -475,11 +482,16 @@ function saveImage(){
       e.preventDefault();
       if(g&&g.dataset.kind==="node"){
         var pid=g.dataset.id;
-        if(pid!=="ball"&&pid.charAt(0)!=="o"&&buildSel.indexOf(pid)===-1){
-          buildSel.push(pid);
+        if(pid!=="ball"&&pid.charAt(0)!=="o"){
           if(buildType==="chain"){
-            render();setStatus("Connected "+buildSel.length+". Tap more players, then tap Done.");
-          }else{
+            if(buildSel.indexOf(pid)!==-1){
+              finishShape();                 // tapping an already-connected player completes the line
+            }else{
+              buildSel.push(pid);render();
+              setStatus(buildSel.length<2?"Connected first player. Tap the next one.":"Connected "+buildSel.length+". Tap that last player again, or tap Done, to finish.");
+            }
+          }else if(buildSel.indexOf(pid)===-1){
+            buildSel.push(pid);
             var need=(buildType==="triangle")?3:4;
             if(buildSel.length>=need){
               CS().shapes.push({type:buildType,ids:buildSel.slice()});
