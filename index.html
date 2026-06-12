@@ -237,7 +237,7 @@ function P(o){
 // Each moment has one or more phases (Before / After). Arrows are stored as pixel coordinates; shapes reference player ids.
 var SCN=[
  {name:"Push up",cue:"Ball near their goal, everyone up!",
-  sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us. Up there it's feet and head only, no hands. The striker makes the diamond: the LM can't cross into the middle, so instead he runs into the goal box to be dangerous. Remember, a diamond can be made by whoever is closest, so it doesn't have to be the same players every time.",
+  sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us. Up there it's feet and head only, no hands. The ball-side players make the diamond, and the winger on the far side sprints in behind to the back post to be dangerous. Remember, a diamond can be made by whoever is closest, so it doesn't have to be the same players every time.",
   phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
 
  {name:"High Press",cue:"High press: win it back high!",
@@ -248,7 +248,7 @@ var SCN=[
   ]},
 
  {name:"Squeeze",cue:"Squeeze and choke",
-  sub:"This is how we defend any time the other team has the ball, anywhere on the field. Only ONE player, the closest one, runs at the ball. We do NOT all swarm it, because that leaves big gaps. Instead everyone else chokes them: we stand in every passing lane, behind them, beside them, and in front, so the player on the ball has nowhere to pass and gets stuck.",
+  sub:"This is how we defend any time the other team has the ball, anywhere on the field. The closest player runs at the ball. The next-closest backs him up, ready to take over if the ball gets past him. We do NOT all swarm it, because that leaves big gaps. Everyone else chokes the dangerous lanes: we block the forward and inside passes so the player on the ball can only go backward or wide, and we squeeze them until they get stuck.",
   phases:[
    {pos:P({st:[305,159],cam:[248,190],lm:[181,230],dm:[241,267],rm:[320,254],lb:[176,394],cb:[241,354],rb:[302,378],gk:[229,502],ball:[321,229],o1:[217,113],o2:[303,119],o3:[128,155],o4:[321,212],o5:[154,258],o6:[331,346],o7:[247,317],o8:[184,370],o9:[223,223]}),arr:[],shapes:[{type:"chain",ids:["st","cam","dm","cb","rb"]}]}
   ]},
