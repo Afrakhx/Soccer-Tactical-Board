@@ -80,11 +80,16 @@
   <p class="sub">Tap a moment to see where everyone goes. Some moments have a Before and After — tap those to watch the play happen.</p>
 
   <div class="chips" id="chips">
-    <button class="chip" onclick="go(0)"><span class="n">1</span>Push up</button>
+    <button class="chip" onclick="go(0)"><span class="n">1</span>High Press</button>
     <button class="chip" onclick="go(1)"><span class="n">2</span>Squeeze</button>
     <button class="chip" onclick="go(2)"><span class="n">3</span>Their kickoff</button>
     <button class="chip" onclick="go(3)"><span class="n">4</span>Our kickoff</button>
     <button class="chip" onclick="go(4)"><span class="n">5</span>Free draw</button>
+  </div>
+
+  <div class="phaserow" id="phaserow" style="display:none">
+    <button class="pbtn" id="beforeBtn" onclick="setPhase(0)">Before</button>
+    <button class="pbtn" id="afterBtn" onclick="setPhase(1)">After</button>
   </div>
 
   <div class="board">
@@ -161,11 +166,6 @@
       <h3 id="cue">Ball near their goal — everyone up!</h3>
       <p id="subtxt"></p>
 
-      <div class="phaserow" id="phaserow" style="display:none">
-        <button class="pbtn" id="beforeBtn" onclick="setPhase(0)">Before</button>
-        <button class="pbtn" id="afterBtn" onclick="setPhase(1)">After</button>
-      </div>
-
       <div class="tools">
         <span class="tlab">Shape</span>
         <button class="tbtn" id="diaBtn" onclick="startShape('diamond')"><span class="sw" style="background:#f4b740"></span>Diamond</button>
@@ -185,10 +185,9 @@
 
       <div class="btnrow">
         <button class="obtn ghost" onclick="resetScene()">Reset this moment</button>
-        <button class="obtn fill" onclick="copyAll()">Copy positions</button>
+        <button class="obtn fill" onclick="saveImage()">Save image</button>
         <span class="status" id="status"></span>
       </div>
-      <textarea id="exp" readonly></textarea>
     </div>
     <div class="keyrow">
       <span><svg width="16" height="16"><circle cx="8" cy="8" r="6" fill="#0c0d10" stroke="#f4f4f1"/></svg>Us</span>
@@ -219,20 +218,23 @@ if(!window.storage){
     };
   }catch(e){}
 }
-// Opponents not used in a moment sit on the bench (y=636) and are hidden from the export.
-var BENCH={o1:[40,636],o2:[76,636],o3:[112,636],o4:[148,636],o5:[184,636],o6:[220,636],o7:[256,636],o8:[292,636],o9:[328,636]};
-function P(o){var z={},k;for(k in BENCH){z[k]=BENCH[k].slice();}for(k in o){z[k]=o[k].slice();}return z;}
+// Build a positions object: the given players/ball/opponents, plus any unused opponents
+// packed into a tidy straight line on the bench (y=636) starting from the left.
+function P(o){
+  var z={},k;for(k in o){z[k]=o[k].slice();}
+  var slot=0;for(var n=1;n<=9;n++){var id="o"+n;if(!z[id]){z[id]=[40+slot*36,636];slot++;}}
+  return z;
+}
 // Each moment has one or more phases (Before / After). Arrows are stored as pixel coordinates; shapes reference player ids.
 var SCN=[
- {name:"Push up",cue:"Ball near their goal — everyone up!",
+ {name:"High Press",cue:"Ball near their goal — everyone up!",
   sub:"When we have the ball up near their goal, the whole team moves up together. The keeper comes out to our retreat line and plays like an extra defender behind us — up there it's feet and head only, no hands. The striker makes the diamond: the LM can't cross into the middle, so instead he runs into the goal box to be dangerous. Remember, a diamond can be made by whoever is closest — it doesn't have to be the same players every time.",
   phases:[{pos:P({st:[252,72],cam:[187,116],lm:[156,49],rm:[320,157],dm:[249,179],lb:[177,213],cb:[232,266],rb:[320,237],gk:[177,427],ball:[312,132],o1:[303,108]}),arr:[],shapes:[{type:"diamond",ids:["st","dm","cam","rm"]},{type:"triangle",ids:["dm","rb","rm"]},{type:"triangle",ids:["lm","cam","st"]}]}]},
 
- {name:"Squeeze",cue:"Squeeze and defend",
-  sub:"This is how we defend any time Phoenix has the ball, anywhere on the field. The closest player runs straight at the ball. Everyone else squeezes in tight, stays between Phoenix and our goal, and blocks the passing lanes so they have nowhere to go. Tap Before and After to see us close them down.",
+ {name:"Squeeze",cue:"Squeeze and choke",
+  sub:"This is how we defend any time Phoenix has the ball, anywhere on the field. Only ONE player — the closest one — runs at the ball. We do NOT all swarm it, because that leaves big gaps. Instead everyone else chokes Phoenix: we stand in every passing lane — behind them, beside them, and in front — so the player on the ball has nowhere to pass and gets stuck.",
   phases:[
-   {pos:P({st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[289,299],o1:[319,269],o2:[222,252],o3:[148,302],o4:[238,392]}),arr:[],shapes:[]},
-   {pos:P({st:[245,205],cam:[220,316],lm:[120,332],rm:[305,365],dm:[252,294],lb:[150,415],cb:[210,428],rb:[264,362],gk:[180,520],ball:[281,337],o1:[292,330],o2:[222,252],o3:[148,302],o4:[238,392]}),arr:[{t:"lane",x1:283,y1:320,x2:231,y2:262},{t:"lane",x1:283,y1:341,x2:247,y2:381},{t:"run",x1:293,y1:351,x2:288,y2:345}],shapes:[]}
+   {pos:P({st:[256,155],cam:[194,172],lm:[162,199],dm:[207,286],rm:[288,272],lb:[172,403],cb:[212,383],rb:[227,330],gk:[162,507],ball:[271,286],o1:[194,114],o2:[246,135],o3:[132,190],o4:[311,231],o5:[202,238],o6:[301,279],o7:[236,321],o8:[187,362],o9:[212,410]}),arr:[],shapes:[]}
   ]},
 
  {name:"Their kickoff",cue:"Their kickoff",
@@ -323,7 +325,7 @@ function render(){
   var chips=el("chips").getElementsByTagName("button"),c;
   for(c=0;c<chips.length;c++){chips[c].className=(c===cur)?"chip on":"chip";}
 }
-function go(i){cur=i;sel=-1;buildType=null;buildSel=[];el("exp").style.display="none";render();}
+function go(i){cur=i;sel=-1;buildType=null;buildSel=[];render();}
 function setPhase(p){STATE[cur].i=p;sel=-1;buildType=null;buildSel=[];render();}
 function addArrow(t){
   CS().arr.push({t:t,x1:150,y1:344,x2:200,y2:280});
@@ -370,29 +372,39 @@ function loadSaved(){
     }).catch(function(){render();});
   }catch(e){render();}
 }
-function copyAll(){
-  var out={},i,j,k,p;
-  for(i=0;i<SCN.length;i++){
-    var multi=SCN[i].phases.length>1;
-    for(p=0;p<STATE[i].ph.length;p++){
-      var ph=STATE[i].ph[p],sc={players:{},opponents:{},ball:null,arrows:[],shapes:[]};
-      for(k in ph.pos){
-        var rp=[r(ph.pos[k][0]),r(ph.pos[k][1])];
-        if(k==="ball"){sc.ball=rp;}
-        else if(k.charAt(0)==="o"){if(ph.pos[k][1]<600){sc.opponents[NAMES[k]]=rp;}}
-        else{sc.players[NAMES[k]]=rp;}
-      }
-      for(j=0;j<ph.arr.length;j++){var a=ph.arr[j];sc.arrows.push({type:a.t,from:[r(a.x1),r(a.y1)],to:[r(a.x2),r(a.y2)]});}
-      for(j=0;j<ph.shapes.length;j++){var shh=ph.shapes[j];sc.shapes.push({type:shh.type,players:shh.ids.map(function(id){return NAMES[id];})});}
-      out[(i+1)+" "+SCN[i].name+(multi?" ("+(p===0?"before":"after")+")":"")]=sc;
-    }
+// Save just the field view (pitch + whatever is drawn, no bench) as a PNG.
+// On phones the native share sheet lets the user save it to Photos.
+function saveImage(){
+  var svg=el("svg"),keep=sel;
+  sel=-1;renderArrows();                 // drop selection handles from the picture
+  var clone=svg.cloneNode(true);
+  for(var n=0;n<IDS.length;n++){         // bake node positions as transform attributes
+    var id=IDS[n],g=clone.querySelector("#e_"+id);
+    if(g){var p=CS().pos[id];g.setAttribute("transform","translate("+p[0]+","+p[1]+")");g.style.transform="";g.removeAttribute("class");}
   }
-  var txt="Juventus U10 board (pitch is 360 wide by 600 tall, our goal at the bottom):\n"+JSON.stringify(out,null,1);
-  var ta=el("exp");
-  function fb(){ta.style.display="block";ta.value=txt;ta.focus();ta.select();setStatus("Copy the text below.");}
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(function(){setStatus("Copied to clipboard.");}).catch(fb);
-  }else{fb();}
+  clone.setAttribute("viewBox","0 0 360 600");   // crop out the bench strip
+  clone.setAttribute("width","720");clone.setAttribute("height","1200");
+  var xml=new XMLSerializer().serializeToString(clone);
+  sel=keep;renderArrows();
+  var img=new Image();
+  img.onload=function(){
+    var c=document.createElement("canvas");c.width=720;c.height=1200;
+    var ctx=c.getContext("2d");ctx.fillStyle="#0d4a33";ctx.fillRect(0,0,720,1200);ctx.drawImage(img,0,0,720,1200);
+    function done(blob){
+      if(!blob){setStatus("Could not make the image.");return;}
+      var file=new File([blob],"juventus-board.png",{type:"image/png"});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:"Juventus SC U10 board"}).then(function(){setStatus("");}).catch(function(){setStatus("");});
+      }else{
+        var u=URL.createObjectURL(blob),a=document.createElement("a");
+        a.href=u;a.download="juventus-board.png";document.body.appendChild(a);a.click();a.remove();
+        setTimeout(function(){URL.revokeObjectURL(u);},1500);setStatus("Image saved.");
+      }
+    }
+    try{c.toBlob(done,"image/png");}catch(e){setStatus("Could not make the image.");}
+  };
+  img.onerror=function(){setStatus("Could not make the image.");};
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
 }
 (function(){
   var svg=el("svg"),mode=null,nid=null,ai=null,aend=null,abS=null,grab=null;
